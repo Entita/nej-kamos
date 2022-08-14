@@ -22,7 +22,7 @@ mongoose.connection.on('connected', () => {
 const app = express();
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: '*', allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
