@@ -22,7 +22,7 @@ export const asyncAddProduct = async (data) => {
 
 export const asyncRefreshProducts = async (dispatch) => {
   return await agent.Product.get()
-    .then((data) => !data.failed && dispatch(refreshProducts(data)))
+    .then((data) => !data?.failed && dispatch(refreshProducts(data)))
     .catch(console.error);
 };
 

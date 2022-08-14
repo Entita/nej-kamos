@@ -19,7 +19,7 @@ export const account = createSlice({
 export const asyncLogout = async (dispatch) => {
   return await agent.Account.logout()
     .then((data) => {
-      if (!data.failed) {
+      if (!data?.failed) {
         dispatch(refreshAccount())
         asyncRefreshBasket(dispatch)
       }
@@ -29,14 +29,14 @@ export const asyncLogout = async (dispatch) => {
 
 export const asyncRefreshAccount = async (dispatch) => {
   return await agent.Account.get()
-    .then((data) => !data.failed && dispatch(refreshAccount(data)))
+    .then((data) => !data?.failed && dispatch(refreshAccount(data)))
     .catch(console.error);
 };
 
 export const asyncCreateAccount = async (dispatch, data) => {
   return await agent.Account.register(data)
     .then((data) => {
-      if (!data.failed) {
+      if (!data?.failed) {
         dispatch(refreshAccount(data.data))
         asyncRefreshBasket(dispatch)
       }
@@ -47,7 +47,7 @@ export const asyncCreateAccount = async (dispatch, data) => {
 export const asyncAccountReplaceBasket = async (dispatch, data) => {
   return await agent.Account.replaceBasket(data)
     .then((data) => {
-      if (!data.failed) {
+      if (!data?.failed) {
         dispatch(refreshAccount(data.data));
         asyncRefreshBasket(dispatch);
       }
@@ -57,14 +57,14 @@ export const asyncAccountReplaceBasket = async (dispatch, data) => {
 
 export const asyncAccountUpdate = async (dispatch, data) => {
   return await agent.Account.update(data)
-    .then((data) => !data.failed && dispatch(refreshAccount(data.data)))
+    .then((data) => !data?.failed && dispatch(refreshAccount(data.data)))
     .catch(console.error);
 };
 
 export const asyncVerifyAccount = async (dispatch) => {
   return await agent.Account.verify()
     .then((data) => {
-      if (!data.failed) {
+      if (!data?.failed) {
         dispatch(refreshAccount(data.data));
         return !!data.data;
       }
@@ -75,7 +75,7 @@ export const asyncVerifyAccount = async (dispatch) => {
 export const asyncLoginAccount = async (dispatch, data) => {
   return await agent.Account.login(data)
     .then((data) => {
-      if (!data.failed) {
+      if (!data?.failed) {
         if (data.basketReplace) {
           return data.data;
         } else {
@@ -90,7 +90,7 @@ export const asyncLoginAccount = async (dispatch, data) => {
 export const resendAccountVerification = async (dispatch) => {
   return await agent.Account.resendVerification()
     .then((data) => {
-      if (!data.failed) {
+      if (!data?.failed) {
         dispatch(refreshAccount(data.data));
         return data.data;
       }

@@ -22,25 +22,25 @@ export const basket = createSlice({
 
 export const asyncRefreshBasket = async (dispatch) => {
   return await agent.Basket.get()
-    .then((data) => !data.failed && dispatch(refreshBasket(data)))
+    .then((data) => !data?.failed && dispatch(refreshBasket(data)))
     .catch(console.error);
 };
 
 export const asyncBasketSetItem = async (dispatch, id, quantity) => {
   return await agent.Basket.setItem(id, quantity)
-    .then((data) => !data.failed && dispatch(refreshBasket(data)))
+    .then((data) => !data?.failed && dispatch(refreshBasket(data)))
     .catch(console.error);
 };
 
 export const asyncBasketAddItem = async (dispatch, id, quantity) => {
   return await agent.Basket.addItem(id, quantity)
-    .then((data) => !data.failed && dispatch(refreshBasket(data)))
+    .then((data) => !data?.failed && dispatch(refreshBasket(data)))
     .catch(console.error);
 };
 
 export const asyncBasketDeleteItem = async (dispatch, id, quantity) => {
   return await agent.Basket.deleteItem(id, quantity)
-    .then((data) => !data.failed && dispatch(refreshBasket(data)))
+    .then((data) => !data?.failed && dispatch(refreshBasket(data)))
     .catch(console.error);
 };
 
