@@ -61,6 +61,7 @@ export default function CartReplace({
   accountBasket,
   cookieBasket,
 }: Props) {
+
   const bgRef = React.useRef(null);
   const dispatch = useDispatch();
 

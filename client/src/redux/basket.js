@@ -22,7 +22,7 @@ export const basket = createSlice({
 
 export const asyncRefreshBasket = async (dispatch) => {
   return await agent.Basket.get()
-    .then((data) => data && !data.failed && dispatch(refreshBasket(data)))
+    .then((data) => data && !data.failed && dispatch(refreshBasket(data.data)))
     .catch(console.error);
 };
 

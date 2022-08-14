@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Icons, toast } from 'react-toastify';
+import Cookies from 'universal-cookie';
 import Cookie from '../utils/utils';
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_API_URL;
@@ -15,6 +16,13 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(
   async (response) => {
+    if (response.data.cookie) {
+      const cookies = new Cookies();
+      for (const [key, value] of Object.entries(response.data.cookie)) {
+        if (value === '') cookies.remove(key);
+        else cookies.set(key, value);
+      }
+    }
     if (response.data.toast) {
       toast.dismiss('agentPromise');
       if (response.data.failed) {

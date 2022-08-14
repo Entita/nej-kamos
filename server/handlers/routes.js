@@ -193,32 +193,49 @@ router.delete('/api/subcategory', async (req, res) => {
 router.get('/api/basket', async (req, res) => {
   // get basket
   try {
-    let accountCookie = req.cookies.accountId;
+    const accountCookie = req.cookies.accountId;
     let basketCookie = req.cookies.basketId;
-    if (!basketCookie) {
-      if (!accountCookie) {
-        const basket = await createBasket();
-        res.cookie('basketId', basket._id, {
-          maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-        });
-        basketCookie = basket._id;
-      } else {
+    if (accountCookie) {
+      // with account
+      if (basketCookie) {
+        // with basket
         const account = await getAccount({ _id: accountCookie });
-        res.cookie('basketId', account.basketId, {
-          maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-        });
-        basketCookie = account.basketId;
+        const basket = await getBasket(account.basketId);
+
+        if (basket) {
+          basketCookie = account.basketId;
+        } else {
+          const basket = await createBasket();
+          await setBasketToAccount(accountCookie ,basket._id);
+          basketCookie = basket._id;
+        }
+      } else {
+        // without basket
+        const basket = await createBasket();
+        basketCookie = basket._id;
+      }
+    } else {
+      // without account
+      if (basketCookie) {
+        // with basket
+        const basket = await getBasket(basketCookie);
+
+        if (basket) {
+          basketCookie = basket._id;
+        } else {
+          const basket = await createBasket();
+          basketCookie = basket._id;
+        }
+      } else {
+        // without basket
+        const basket = await createBasket();
+        basketCookie = basket._id;
       }
     }
+    
+    const basket = await getBasket(basketCookie);
 
-    let basket = await getBasket(basketCookie);
-    if (!basket) {
-      basket = await createBasket();
-      res.cookie('basketId', basket._id, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-      });
-    }
-    res.send(basket);
+    res.send({ data: basket, cookie: { basketId: basketCookie } });
   } catch (err) {
     console.error('Failed to get basket!', err);
     res.send({ toast: 'Failed to get basket!', failed: true });
@@ -283,9 +300,7 @@ router.get('/api/account', async (req, res) => {
 router.delete('/api/account/logout', async (req, res) => {
   // logout
   try {
-    res.clearCookie('accountId');
-    res.clearCookie('basketId');
-    res.send({ toast: 'Successfully logged out!' });
+    res.send({ toast: 'Successfully logged out!', cookie: { accountId: '', basketId: '' } });
   } catch (err) {
     console.error('Failed to logout!');
     res.send({ toast: 'Failed to logout!', failed: true });
@@ -320,15 +335,8 @@ router.post('/api/account/login', async (req, res) => {
         accountDb = await getAccount({ _id: accountDb._id });
       }
 
-      res.cookie('accountId', accountDb._id, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-      });
-      res.cookie('basketId', accountDb.basketId, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-      });
-
       const account = formatAccountData(accountDb);
-      res.send({ data: account, toast: 'Successfully logged in!' });
+      res.send({ data: account, toast: 'Successfully logged in!', cookie: { accountId: accountDb._id, basketId: accountDb.basketId } });
     }
     else res.send({ toast: 'Failed to logged in! (Wrong credentials)', failed: true });
   } catch (err) {
@@ -344,15 +352,8 @@ router.post('/api/account/replaceBasket', async (req, res) => {
     if (accountDb && basketId) {
       await setBasketToAccount(accountId, basketId);
 
-      res.cookie('accountId', accountId, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-      });
-      res.cookie('basketId', basketId, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-      });
-
       const account = formatAccountData(accountDb);
-      res.send({ data: account, toast: 'Successfully logged in!' });
+      res.send({ data: account, toast: 'Successfully logged in!', cookie: { accountId, basketId } });
     } else throw 'Server Error';
   } catch (err) {
     console.error('Failed to replace account basket!');
@@ -364,29 +365,27 @@ router.post('/api/account/register', async (req, res) => {
   try {
     const { username, password, email, notifications } = req.body;
     const basketCookie = req.cookies.basketId;
+    let newBasketCookie = basketCookie;
+    let newAccountCookie;
     let accountDb = await createAccount({
       username,
       password,
       email,
       notifications,
     });
-    res.cookie('accountId', accountDb._id, {
-      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-    });
+    newAccountCookie = accountDb._id;
 
     if (basketCookie) {
       await setBasketToAccount(accountDb._id, basketCookie);
       accountDb = await getAccount({ _id: accountDb._id });
     } else {
-      res.cookie('basketId', accountDb.basketId, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-      });
+      newBasketCookie = accountDb.basketId;
     }
     const account = formatAccountData(accountDb);
     const emailSent = await sendEmailVerification(accountDb._id, accountDb.email, req.header('Referer'));
     if (!emailSent) throw 'Error when sending email';
 
-    res.send({ data: account, toast: 'Successfully created an account!'})
+    res.send({ data: account, toast: 'Successfully created an account!', cookie: { accountId: newAccountCookie, basketId: newBasketCookie } })
   } catch (err) {
     console.error('Failed to create new account!');
     res.send({ toast: 'Failed to create new account!', failed: true });

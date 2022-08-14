@@ -147,8 +147,8 @@ const getBasket = async (id) => {
 
   return {
     _id: dbBasket._id,
-    discount: couponDb?.discount,
-    coupon: couponDb?.code,
+    discount: couponDb?.discount || null,
+    coupon: couponDb?.code || null,
     products,
   };
 };
@@ -201,7 +201,7 @@ const deleteItemFromBasket = async (basketId, product) => {
 
 const isBasketEmpty = async (basketId) => {
   const basket = await findOneFromMongo(Basket, { _id: basketId });
-  return basket && basket.products.length === 0;
+  return basket?.products.length === 0 || false;
 };
 
 const checkCoupon = async (couponCode) => {
