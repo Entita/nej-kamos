@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const imageSchema = new Schema(
+const subCategorySchema = new Schema(
   {
     name: {
       type: String,
       required: true,
     },
-    url: {
+    category: {
       type: String,
       required: true,
     },
@@ -15,5 +15,5 @@ const imageSchema = new Schema(
   { timestamps: true },
 );
 
-const Image = mongoose.model('images', imageSchema);
-module.exports = Image;
+const SubCategory = mongoose.model('subcategories', subCategorySchema);
+module.exports = SubCategory;

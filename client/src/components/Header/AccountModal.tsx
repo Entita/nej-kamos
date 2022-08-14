@@ -69,7 +69,7 @@ export default function AccountModal({ setShowAccountModal }: Props) {
     if (resetPassword.length === 0) return;
 
     await agent.Account.resetPassword({ email: resetPassword })
-      .then((data) => !data.failed && setType('login'));
+      .then((data) => data && !data.failed && setType('login'));
   }
 
   if (cartReplaceData)

@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model(
-  'resetpasswords',
-  new mongoose.Schema(
-    {
-      accountId: {
-        type: String,
-        required: true,
-      },
-      changed: {
-        type: Boolean,
-        default: false,
-      },
+const resetPasswordSchema = new Schema(
+  {
+    accountId: {
+      type: String,
+      required: true,
     },
-    { timestamps: true },
-  ),
+    changed: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true },
 );
+
+const ResetPassword = mongoose.model('resetpasswords', resetPasswordSchema);
+module.exports = ResetPassword;

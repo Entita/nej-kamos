@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model(
-  'transactions',
-  new mongoose.Schema(
-    {
-      basketId: {
-        type: String,
-        required: true,
-      },
-      status: {
-        type: String,
-        default: 'waiting',
-      },
+const transactionSchema = new Schema(
+  {
+    basketId: {
+      type: String,
+      required: true,
     },
-    { timestamps: true },
-  ),
+    status: {
+      type: String,
+      default: 'waiting',
+    },
+  },
+  { timestamps: true },
 );
+
+const Transaction = mongoose.model('transactions', transactionSchema);
+module.exports = Transaction;

@@ -1,30 +1,31 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model(
-  'baskets',
-  new mongoose.Schema(
-    {
-      products: {
-        type: [
-          {
-            _id: false,
-            productId: {
-              type: String,
-              required: true,
-            },
-            quantity: {
-              type: Number,
-              required: true,
-            },
+const basketSchema = new Schema(
+  {
+    products: {
+      type: [
+        {
+          _id: false,
+          productId: {
+            type: String,
+            required: true,
           },
-        ],
-        default: [],
-      },
-      couponId: {
-        type: String || null,
-        default: null,
-      }
+          quantity: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+      default: [],
     },
-    { timestamps: true },
-  ),
+    couponId: {
+      type: String || null,
+      default: null,
+    },
+  },
+  { timestamps: true },
 );
+
+const Basket = mongoose.model('baskets', basketSchema);
+module.exports = Basket;

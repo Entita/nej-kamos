@@ -13,7 +13,7 @@ export default function SubHeader() {
   const navigate = useNavigate();
 
   return (
-    <WrapperStyled>
+    <WrapperStyled hidden={categories.length === 0}>
       {categories.map((category: string, index: number) => {
         interface subcategories {
           name: string,

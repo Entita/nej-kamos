@@ -78,7 +78,7 @@ export default function AddingSchema() {
       toastId: 'agentPromise',
     });
     asyncAddCategory({ name: categoryName }).then((data) => {
-      if (!data.failed) {
+      if (data && !data.failed) {
         setOpenCategory(false);
         setCategoryName('');
       }
@@ -101,7 +101,7 @@ export default function AddingSchema() {
       name: subCategoryName,
       category: subCategoryCategory,
     }).then((data) => {
-      if (!data.failed) {
+      if (data && !data.failed) {
         setOpenSubCategory(false);
         setSubCategoryName('');
         setSubCategoryCategory('');
@@ -134,7 +134,7 @@ export default function AddingSchema() {
     });
 
     asyncAddProduct(data).then((data) => {
-      if (!data.failed) {
+      if (data && !data.failed) {
         setOpenProduct(false);
         setProductName('');
         setProductPictureUrl('');

@@ -27,7 +27,7 @@ export const asyncGetSubcategories = async() => {
 
 export const asyncRefreshSubcategories = async (dispatch) => {
   return await asyncGetSubcategories()
-    .then((data) => !data?.failed && dispatch(refreshSubcategories(data)))
+    .then((data) => data && !data.failed && dispatch(refreshSubcategories(data)))
 };
 
 export const { refreshSubcategories } = subcategories.actions;

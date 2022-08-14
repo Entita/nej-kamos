@@ -27,7 +27,7 @@ export const asyncGetCategories = async() => {
 
 export const asyncRefreshCategories = async (dispatch) => {
   return await asyncGetCategories()
-    .then((data) => !data?.failed && dispatch(refreshCategories(data)))
+    .then((data) => data && !data.failed && dispatch(refreshCategories(data)))
 };
 
 export const { refreshCategories } = categories.actions;

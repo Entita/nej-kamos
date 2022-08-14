@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Color } from '../../utils/colors';
 
-export const WrapperStyled = styled.div`
+export const WrapperStyled = styled.div<{ hidden: Boolean }>`
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -10,7 +10,7 @@ export const WrapperStyled = styled.div`
   width: 100%;
   justify-content: space-around;
   padding-bottom: 8px;
-  border-bottom: 1px solid ${Color.lighterGrey};
+  border-bottom: ${({ hidden }) => hidden ? 'unset' : `1px solid ${Color.lighterGrey}`};
 `;
 
 const SubHeaderStyled = styled.span<any>`
