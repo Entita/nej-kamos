@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -24,8 +25,12 @@ const app = express();
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(
   cors({
+    origin: [
+      "https://nej-kamos.herokuapp.com",
+      "http://localhost:3000",
+      "http://localhost:4000",
+    ],
     credentials: true,
-    origin: true,
   }),
 );
 app.use(express.json());
@@ -40,6 +45,11 @@ if (app.get('env') === 'development') {
     setTimeout(() => {
       next();
     }, process.env.RES_DELAY);
+  });
+} else {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
 }
 
