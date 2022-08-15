@@ -46,14 +46,10 @@ if (app.get('env') === 'development') {
       next();
     }, process.env.RES_DELAY);
   });
-} else {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-  });
-}
+} else app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', router);
+if (app.get('env') === 'production') app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'client/build', 'index.html')));
 
 // Server
 const server = require('http').createServer(app);

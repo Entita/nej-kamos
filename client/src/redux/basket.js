@@ -12,10 +12,12 @@ export const basket = createSlice({
   reducers: {
     refreshBasket: (state, action) => {
       const basket = action.payload;
-      state._id = basket._id;
-      state.discount = basket.discount;
-      state.coupon = basket.coupon;
-      state.products = basket.products;
+      if (basket) {
+        state._id = basket._id;
+        state.discount = basket.discount;
+        state.coupon = basket.coupon;
+        state.products = basket.products;
+      }
     },
   },
 });

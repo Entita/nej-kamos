@@ -16,7 +16,7 @@ export default function LandingPage() {
       <Categories />
       <ProductsStyled>
         <Products />
-        {account?.roles.includes('admin') && <AddingSchema />}
+        {account?.roles?.includes('admin') && <AddingSchema />}
       </ProductsStyled>
     </WrapperStyled>
   );
