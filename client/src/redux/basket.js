@@ -2,8 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import agent from '../api/agent';
 
 const initialState = {
-  _id: null,
-  products: [],
+  basket: {
+    products: [],
+  }
 };
 
 export const basket = createSlice({
@@ -11,13 +12,7 @@ export const basket = createSlice({
   initialState,
   reducers: {
     refreshBasket: (state, action) => {
-      const basket = action.payload;
-      if (basket) {
-        state._id = basket._id;
-        state.discount = basket.discount;
-        state.coupon = basket.coupon;
-        state.products = basket.products;
-      }
+      state.basket = action.payload === '' ? null : action.payload;
     },
   },
 });

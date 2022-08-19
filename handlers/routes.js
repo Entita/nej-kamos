@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const util = require('util');
+const { isBasketActive } = require('./authentication');
 const { sendEmailVerification, sendResetPassword } = require('./mailer');
 const router = express.Router();
 const {
@@ -34,7 +35,12 @@ const {
   checkCoupon,
   createCoupon,
   setCouponToBasket,
+  createTransaction,
+  getTransaction,
+  addTransactionToAccount,
+  deactivateBasket,
 } = require('./mongo');
+const { makePayment } = require('./payment');
 
 router.get('/api/product', async (req, res) => {
   // get product
@@ -241,7 +247,7 @@ router.get('/api/basket', async (req, res) => {
     res.send({ toast: 'Failed to get basket!', failed: true });
   }
 });
-router.put('/api/basket?', async (req, res) => {
+router.put('/api/basket?', isBasketActive, async (req, res) => {
   // set basket product quantity
   try {
     const query = req.query;
@@ -255,7 +261,7 @@ router.put('/api/basket?', async (req, res) => {
     res.send({ toast: 'Failed to set item to basket!', failed: true });
   }
 });
-router.post('/api/basket?', async (req, res) => {
+router.post('/api/basket?', isBasketActive, async (req, res) => {
   // add item to basket
   try {
     const query = req.query;
@@ -269,7 +275,7 @@ router.post('/api/basket?', async (req, res) => {
     res.send({ toast: 'Failed to add item to basket!', failed: true });
   }
 });
-router.delete('/api/basket?', async (req, res) => {
+router.delete('/api/basket?', isBasketActive, async (req, res) => {
   // remove item from basket
   try {
     const query = req.query;
@@ -497,9 +503,9 @@ router.post('/api/account/resetPasswordVerify', async (req, res) => {
 router.post('/api/account/update', async (req, res) => {
   // update account
   try {
-    const { username, password, phone, notifications, address } = req.body;
+    const { firstname, surname, username, password, phone, notifications, address } = req.body;
     const accountCookie = req.cookies.accountId;
-    const updatedAccount = await updateAccount(accountCookie, { username, password, phone, notifications, address });
+    const updatedAccount = await updateAccount(accountCookie, { firstname, surname, username, password, phone, notifications, address });
     if (!updatedAccount) throw 'Error updating acccount';
 
     const accountDb = await getAccount({ _id: accountCookie });
@@ -510,7 +516,7 @@ router.post('/api/account/update', async (req, res) => {
     res.send({ toast: 'Failed update account!', failed: true });
   }
 });
-router.post('/api/coupon?', async (req, res) => {
+router.post('/api/coupon?', isBasketActive, async (req, res) => {
   // apply coupon
   try {
     const { code } = req.query;
@@ -530,7 +536,7 @@ router.post('/api/coupon?', async (req, res) => {
     res.send({ toast: 'Failed to apply coupon!', failed: true });
   }
 });
-router.delete('/api/coupon', async (req, res) => {
+router.delete('/api/coupon', isBasketActive, async (req, res) => {
   // unapply coupon
   try {
       const basketCookie = req.cookies.basketId;
@@ -565,7 +571,8 @@ router.post('/api/coupon/add', async (req, res) => {
         break;
     }
   }
-});router.post('/api/coupon/activate?', async (req, res) => {
+});
+router.post('/api/coupon/activate?', async (req, res) => {
   // activate coupon
   try {
     const query = req.query;
@@ -575,7 +582,8 @@ router.post('/api/coupon/add', async (req, res) => {
     console.error('Failed to activate coupon!');
     res.send({ toast: 'Failed to activate coupon!', failed: true });
   }
-});router.delete('/api/coupon/deactivate?', async (req, res) => {
+});
+router.delete('/api/coupon/deactivate?', async (req, res) => {
   // deactivate coupon
   try {
     const query = req.query;
@@ -587,6 +595,64 @@ router.post('/api/coupon/add', async (req, res) => {
   }
 });
 
-router.post('/api/payments', async (req, res) => {});
+router.post('/api/transaction', isBasketActive, async (req, res) => {
+  // create transaction
+  try {
+    const { type } = req.body;
+    const basketCookie = req.cookies.basketId;
+    const accountCookie = req.cookies.accountId;
+    const createdTransaction = await createTransaction({ basketId: basketCookie, type });
+    if (!createdTransaction) throw "Failed creating transaction";
+
+    if (accountCookie) {
+      const updatedAccount = await addTransactionToAccount(accountCookie, createdTransaction._id);
+      if (!updatedAccount) throw "Failed update account transactions";
+    }
+
+    const deactivatedBasket = await deactivateBasket(basketCookie);
+    if (!deactivatedBasket) throw "Failed deactivating basket";
+
+    const basket = await createBasket();
+    if (!basket) throw "Failed to create basket";
+    const basketSet = await setBasketToAccount(accountCookie, basket._id);
+    if (!basketSet) throw "Failed to assign basket to account";
+
+    res.send({ data: createdTransaction._id, cookie: { basketId: '' } })
+  } catch (err) {
+    console.error('Failed to create transaction!');
+    res.send({ toast: 'Failed to create transaction!', failed: true });
+  }
+});
+
+router.get('/api/transaction?', async (req, res) => {
+  // get transaction
+  try {
+    const { transactionId } = req.query;
+    const gotTransaction = await getTransaction(transactionId);
+    if (!gotTransaction) throw "Failed to get transaction";
+
+    res.send({ data: gotTransaction })
+  } catch (err) {
+    console.error('Failed to get transaction!');
+    res.send({ toast: 'Failed to get transaction!', failed: true });
+  }
+});
+
+router.post('/api/payment', async (req, res) => {
+  // create payment
+  try {
+    const { transactionId } = req.body;
+    const gotTransaction = await getTransaction(transactionId);
+    if (!gotTransaction) throw "Failed to get transaction";
+    
+    const stripeSession = await makePayment(req.headers.origin, gotTransaction.basket);
+    if (!stripeSession) throw "Failed to create stripe session";
+
+    res.send({ data: stripeSession.url })
+  } catch (err) {
+    console.error('Failed to create payment!');
+    res.send({ toast: 'Failed to create payment!', failed: true });
+  }
+});
 
 module.exports = router;

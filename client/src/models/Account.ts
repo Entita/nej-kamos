@@ -1,9 +1,11 @@
 export interface Account {
   _id: string,
+  firstname: string | null,
+  surname: string | null,
   username: string,
   password: string,
   email: string,
-  phone: number,
+  phone: number | null,
   verified: boolean,
   roles: Array<string>,
   basketId: string,

@@ -14,6 +14,7 @@ import SideCart from './Cart/Cart';
 import Header from './Header/Header';
 import LandingPage from './LandingPage/LandingPage';
 import NotFound from './NotFoundPage/NotFound';
+import OrderPage from './OrderPage/OrderPage';
 import ProductPage from './ProductPage/ProductPage';
 import ResetPasswordPage from './ResetPassword/ResetPasswordPage';
 import VerificationPage from './VerificationPage/VerificationPage';
@@ -63,6 +64,7 @@ export default function AppRouter() {
             <Route path='/product/*' element={<ProductPage />} />
             <Route path='/account' element={<AccountPage />} />
             <Route path='/basket' element={<BasketPage setShowCart={() => setShowCart(true)} />} />
+            <Route path='/order/*' element={<OrderPage />} />
             <Route path='/verification/*' element={<VerificationPage />} />
             <Route path='/passwordReset/*' element={<ResetPasswordPage />} />
             <Route path='*' element={<NotFound />} />;

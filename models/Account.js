@@ -4,6 +4,14 @@ const Schema = mongoose.Schema;
 
 const accountSchema = new Schema(
   {
+    firstname: {
+      type: String || null,
+      default: null,
+    },
+    surname: {
+      type: String || null,
+      default: null,
+    },
     username: {
       type: String,
       required: true,

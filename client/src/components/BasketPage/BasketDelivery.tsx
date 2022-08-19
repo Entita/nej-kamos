@@ -6,7 +6,7 @@ export default function BasketDelivery() {
     <>
       <ModalTitleStyled>Delivery</ModalTitleStyled>
       <ModalContentStyled>
-        
+        In progress
       </ModalContentStyled>
     </>
   )

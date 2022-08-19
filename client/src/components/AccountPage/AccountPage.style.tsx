@@ -25,7 +25,11 @@ export const AccountTableStyled = styled.div`
   }
 `;
 export const AccountTitleStyled = styled.h1``;
-export const AccountTransactionStyled = styled.span``;
+export const AccountRoleStyled = styled.span``;
+export const AccountTransactionStyled = styled.span`
+  text-decoration: underline;
+  cursor: pointer;
+`;
 export const AccountLeftStyled = styled.span``;
 export const AccountSelectStyled = styled.select`
   width: 100%;

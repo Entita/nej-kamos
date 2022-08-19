@@ -26,7 +26,7 @@ import NotFound from '../NotFoundPage/NotFound';
 export default function ProductPage() {
   const query = useLocation().pathname;
   const productId = query.split('/product/')[1];
-  const basket = useSelector((state: any) => state.basket);
+  const basket = useSelector((state: any) => state.basket.basket);
   const basketProduct = getProduct(basket.products, productId);
   const products = useSelector((state: any) => state.products.products);
   const product = {

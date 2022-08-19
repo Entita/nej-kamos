@@ -11,7 +11,7 @@ const Coupon = require('../models/Coupon');
 const findOneFromMongo = async (collection, filter) => {
   return await new Promise((resolve) => {
     collection.findOne(filter, (err, data) => {
-      if (err) throw err;
+      if (err) resolve(null);
       if (data) resolve(data);
       else resolve(null);
     });
@@ -121,36 +121,7 @@ const setBasketToAccount = async (accountId, basketId) => {
 
 const getBasket = async (id) => {
   const dbBasket = await findOneFromMongo(Basket, { _id: id });
-  if (!dbBasket) return;
-  
-  const products = [];
-  for (product of dbBasket.products) {
-    const dbProduct = await findOneFromMongo(Product, { _id: product.productId });
-    const filteredProduct = {
-      _id: dbProduct._id,
-      name: dbProduct.name,
-      price: dbProduct.price,
-      discount: dbProduct.discount,
-      imageUrl: dbProduct.imageUrl,
-      brand: dbProduct.brand,
-      description: dbProduct.description,
-      category: dbProduct.category,
-      subcategory: dbProduct.subcategory,
-      stock: dbProduct.stock,
-      quantity: product.quantity,
-    };
-
-    products.push(filteredProduct);
-  }
-
-  const couponDb = await findOneFromMongo(Coupon, { _id: dbBasket.couponId });
-
-  return {
-    _id: dbBasket._id,
-    discount: couponDb?.discount || null,
-    coupon: couponDb?.code || null,
-    products,
-  };
+  return await formatBasketData(dbBasket);
 };
 
 const setItemToBasket = async (basketId, product) => {
@@ -213,8 +184,16 @@ const updateAccountEmailSentAt = async (accountId) => {
   return await UpdateOneFromMongo(Account, { _id: accountId }, { emailSentAt: new Date() });
 };
 
+const deactivateBasket = async (basketId) => {
+  return await UpdateOneFromMongo(Basket, { _id: basketId }, { active: false });
+};
+
 const updateAccount = async (accountId, data) => {
   return await UpdateOneFromMongo(Account, { _id: accountId }, data);
+};
+
+const addTransactionToAccount = async (accountId, transactionId) => {
+  return await UpdateOneFromMongo(Account, { _id: accountId }, { $push: { transactionIds: transactionId } });
 };
 
 const getResetPassword = async (resetId) => {
@@ -239,6 +218,11 @@ const accountChangePassword = async (email, password) => {
 
 const verifyAccount = async (accountId) => {
   return await UpdateOneFromMongo(Account, { _id: accountId }, { verified: true });
+};
+
+const getTransaction = async (orderId) => {
+  const dbTransaction = await findOneFromMongo(Transaction, { _id: orderId });
+  return await formatOrderData(dbTransaction);
 };
 
 const createBasket = async (data) => {
@@ -273,6 +257,8 @@ const formatAccountData = (dbAccount) => {
   if (!dbAccount) return;
 
   return {
+    firstname: dbAccount.firstname,
+    surname: dbAccount.surname,
     username: dbAccount.username,
     password: dbAccount.password,
     email: dbAccount.email,
@@ -284,7 +270,52 @@ const formatAccountData = (dbAccount) => {
     address: dbAccount.address,
     notifications: dbAccount.notifications,
   };
-}
+};
+
+const formatBasketData = async (dbBasket) => {
+  if (!dbBasket) return;
+  
+  const products = [];
+  for (product of dbBasket.products) {
+    const dbProduct = await findOneFromMongo(Product, { _id: product.productId });
+    const filteredProduct = {
+      _id: dbProduct._id,
+      name: dbProduct.name,
+      price: dbProduct.price,
+      discount: dbProduct.discount,
+      imageUrl: dbProduct.imageUrl,
+      brand: dbProduct.brand,
+      description: dbProduct.description,
+      category: dbProduct.category,
+      subcategory: dbProduct.subcategory,
+      stock: dbProduct.stock,
+      quantity: product.quantity,
+    };
+
+    products.push(filteredProduct);
+  }
+
+  const couponDb = await findOneFromMongo(Coupon, { _id: dbBasket.couponId });
+
+  return {
+    _id: dbBasket._id,
+    active: dbBasket.active,
+    discount: couponDb?.discount || null,
+    coupon: couponDb?.code || null,
+    products,
+  };
+};
+
+const formatOrderData = async (dbOrder) => {
+  if (!dbOrder) return;
+
+  return {
+    basket: await getBasket(dbOrder.basketId),
+    _id: dbOrder._id,
+    status: dbOrder.status,
+    type: dbOrder.type,
+  };
+};
 
 exports.createAccount = createAccount;
 exports.createBasket = createBasket;
@@ -317,3 +348,6 @@ exports.updateAccount = updateAccount;
 exports.checkCoupon = checkCoupon;
 exports.createCoupon = createCoupon;
 exports.setCouponToBasket = setCouponToBasket;
+exports.getTransaction = getTransaction;
+exports.addTransactionToAccount = addTransactionToAccount;
+exports.deactivateBasket = deactivateBasket;

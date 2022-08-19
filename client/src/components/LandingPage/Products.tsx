@@ -18,7 +18,7 @@ const addQuantityToProducts = (basketProducts: any, products: Array<Product>) =>
 }
 
 export default function Products() {
-  const basket = useSelector((state: any) => state.basket);
+  const basket = useSelector((state: any) => state.basket.basket);
   const products = useSelector((state: any) => state.products.products);
   const query = new URLSearchParams(useLocation().search);
   const filteredProducts = filterProducts(products, query);

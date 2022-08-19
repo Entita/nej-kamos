@@ -19,6 +19,10 @@ const basketSchema = new Schema(
       ],
       default: [],
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
     couponId: {
       type: String || null,
       default: null,

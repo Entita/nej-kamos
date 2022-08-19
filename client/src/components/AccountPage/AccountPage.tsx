@@ -9,6 +9,7 @@ import {
   AccountLeftStyled,
   AccountOptionStyled,
   AccountRightStyled,
+  AccountRoleStyled,
   AccountSelectStyled,
   AccountTableStyled,
   AccountTitleStyled,
@@ -21,11 +22,14 @@ import {
 import { asyncAccountUpdate } from '../../redux/account';
 import { isPasswordValid, isUsernameInUse } from '../../utils/validators';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function AccountPage() {
   const account = useSelector((state: any) => state.account.account);
 
   const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [firstname, setFirstname] = React.useState<string>(account?.firstname);
+  const [surname, setSurname] = React.useState<string>(account?.surname);
   const [username, setUsername] = React.useState<string>(account?.username);
   const [password, setPassword] = React.useState<string>(account?.password);
   const [phone, setPhone] = React.useState<Number>(account?.phone);
@@ -37,17 +41,20 @@ export default function AccountPage() {
   const [addressZip, setAddressZip] = React.useState<Number>(account?.address?.zip);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const setDefault = () => {
-    setUsername(account.username);
-    setPassword(account.password);
-    setPhone(account.phone);
-    setNotificationsNews(account.notifications.news);
-    setNotificationsMarketing(account.notifications.marketing);
-    setAddressCity(account.address?.city);
-    setAddressStreet(account.address?.street);
-    setAddressStreetNumber(account.address?.streetNumber);
-    setAddressZip(account.address?.zip);
+    setFirstname(account?.firstname);
+    setSurname(account?.surname);
+    setUsername(account?.username);
+    setPassword(account?.password);
+    setPhone(account?.phone);
+    setNotificationsNews(account?.notifications.news);
+    setNotificationsMarketing(account?.notifications.marketing);
+    setAddressCity(account?.address?.city);
+    setAddressStreet(account?.address?.street);
+    setAddressStreetNumber(account?.address?.streetNumber);
+    setAddressZip(account?.address?.zip);
     setEditMode(false);
   }
 
@@ -56,6 +63,8 @@ export default function AccountPage() {
 
     const updateAddress = addressCity && addressStreet && addressStreetNumber && addressZip;
     await asyncAccountUpdate(dispatch, {
+      firstname,
+      surname,
       username,
       password,
       phone: phone || null,
@@ -80,6 +89,14 @@ export default function AccountPage() {
       <AccountTitleStyled>Account details</AccountTitleStyled>
       <AccountWrapperStyled>
         <AccountTableStyled>
+          <AccountLeftStyled>firstname:</AccountLeftStyled>
+          <AccountRightStyled>
+            <AccountInputStyled onChange={({ target }) => setFirstname(target.value)} value={String(editMode ? firstname || '' : firstname || 'neuloženo')} readonly={!editMode} />
+          </AccountRightStyled>
+          <AccountLeftStyled>surname:</AccountLeftStyled>
+          <AccountRightStyled>
+            <AccountInputStyled onChange={({ target }) => setSurname(target.value)} value={String(editMode ? surname || '' : surname || 'neuloženo')} readonly={!editMode} />
+          </AccountRightStyled>
           <AccountLeftStyled>username:</AccountLeftStyled>
           <AccountRightStyled>
             <AccountInputStyled onChange={({ target }) => setUsername(target.value)} value={username} readonly={!editMode} />
@@ -90,7 +107,7 @@ export default function AccountPage() {
           </AccountRightStyled>
           <AccountLeftStyled>phone:</AccountLeftStyled>
           <AccountRightStyled>
-            <AccountInputStyled onChange={({ target }) => setPhone(Number(target.value))} value={String(editMode ? (phone || '') : (phone || 'žádný'))} readonly={!editMode} />
+            <AccountInputStyled onChange={({ target }) => setPhone(Number(target.value))} value={String(editMode ? phone || '' : phone || 'žádný')} readonly={!editMode} />
           </AccountRightStyled>
           <AccountLeftStyled>email:</AccountLeftStyled>
           <AccountRightStyled>{account.email}</AccountRightStyled>
@@ -99,14 +116,14 @@ export default function AccountPage() {
           <AccountLeftStyled>roles:</AccountLeftStyled>
           <AccountRightStyled>
             {account.roles.map((role: string, index: number) => 
-              <AccountTransactionStyled key={index}>{role}</AccountTransactionStyled>
+              <AccountRoleStyled key={index}>{role}</AccountRoleStyled>
             )}
           </AccountRightStyled>
           <AccountLeftStyled>transactionIds</AccountLeftStyled>
           <AccountRightStyled>
             {account.transactionIds.length === 0 && 'žádné'}
-            {account.transactionIds.map((transaction: string, index: number) => 
-              <AccountTransactionStyled key={index}>{transaction}</AccountTransactionStyled>
+            {[...account.transactionIds].reverse().map((transaction: string, index: number) => 
+              <AccountTransactionStyled key={index} onClick={() => navigate(`/order/${transaction}`)}>{transaction}</AccountTransactionStyled>
             )}
           </AccountRightStyled>
           <AccountLeftStyled>notifications</AccountLeftStyled>

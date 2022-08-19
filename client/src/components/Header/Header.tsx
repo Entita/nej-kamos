@@ -30,7 +30,7 @@ interface Props {
 
 export default function Header({ onCartClick }: Props) {
   const [showAccountModal, setShowAccountModal] = React.useState<boolean>(false); // prettier-ignore
-  const basket = useSelector((state: any) => state.basket);
+  const basket = useSelector((state: any) => state.basket.basket);
   const account = useSelector((state: any) => state.account.account);
   const navigate = useNavigate();
   const dispatch = useDispatch();

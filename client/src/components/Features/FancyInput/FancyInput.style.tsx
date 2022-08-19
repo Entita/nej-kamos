@@ -1,11 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const LoginLabelStyled = styled.label`
   position: absolute;
-  left: 8px;
-  top: 10px;
   color: #999;
-  font-size: 12px;
   z-index: 1;
   pointer-events: none;
   transition: all 150ms ease-out, font-size 150ms ease-out, top 150ms ease-out;
@@ -16,18 +13,51 @@ export const LoginInputStyled = styled.input<{ value: any }>`
   border-radius: 6px;
   padding: 12px 12px 2px 12px;
   color: black;
-  font-size: 14px;
   border: none;
   transition: padding 0.2s ease;
 `;
 
-export const LoginInputWrapperStyled = styled.div<{ focused: Boolean }>`
+export const LoginInputWrapperStyled = styled.div<any>`
   position: relative;
   height: fit-content;
 
   ${LoginLabelStyled} {
-    font-size: ${({ focused }) => focused && '9px'};
-    top: ${({ focused }) => focused && '2px'};
-    left: ${({ focused }) => focused && '10px'};
+    ${({ size }) =>
+      size === 'small' ?
+        css`
+          font-size: ${({ focused }: any) => focused ? '9px' :'12px'};
+          top: ${({ focused }: any) => focused ? '2px' : '10px'};
+          left: ${({ focused }: any) => focused ? '10px' : '8px'};
+        ` :
+      size === 'medium' ?
+        css`
+          font-size: ${({ focused }: any) => focused ? '15px' :'20px'};
+          top: ${({ focused }: any) => focused ? '0' : '10px'};
+          left: ${({ focused }: any) => focused ? '10px' : '8px'};
+        ` :
+      (size === 'large' ?
+        css`
+          font-size: ${({ focused }: any) => focused ? '21px' :'32px'};
+          top: ${({ focused }: any) => focused ? '0' : '12px'};
+          left: ${({ focused }: any) => focused ? '10px' : '8px'};
+        ` : '')}
+  }
+
+  ${LoginInputStyled} {
+    ${({ size }) =>
+      size === 'small' ?
+        css`
+          font-size: 14px;
+        ` :
+      size === 'medium' ?
+        css`
+          font-size: 24px;
+          padding-top: 14px;
+        ` :
+      (size === 'large' ?
+        css`
+          font-size: 32px;
+          padding-top: 22px;
+        ` : '')}
   }
 `;

@@ -7,14 +7,17 @@ import {
 
 interface Props {
   placeholder: string;
+  defaultValue?: string;
+  size?: 'small' | 'medium' | 'large';
+  validation?: Function;
 }
 
-export default function FancyInput({ placeholder }: Props) {
-  const [value, setValue] = React.useState<String>('');
-  const [focused, setFocused] = React.useState<Boolean>(false);
+export default function FancyInput({ placeholder, defaultValue, size = 'small', validation = () => true }: Props) {
+  const [value, setValue] = React.useState<String | Number>(defaultValue || '');
+  const [focused, setFocused] = React.useState<Boolean>(!!defaultValue);
 
   return (
-    <LoginInputWrapperStyled focused={focused}>
+    <LoginInputWrapperStyled focused={focused} size={size}>
       <LoginLabelStyled>{placeholder}</LoginLabelStyled>
       <LoginInputStyled
         onFocus={() => setFocused(true)}
@@ -23,7 +26,7 @@ export default function FancyInput({ placeholder }: Props) {
         }}
         value={value}
         type='text'
-        onChange={({ target }: any) => setValue(target.value)}
+        onChange={({ target }: any) => validation(target.value) && setValue(target.value)}
       />
     </LoginInputWrapperStyled>
   );

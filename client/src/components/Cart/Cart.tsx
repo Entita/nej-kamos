@@ -26,7 +26,7 @@ interface Props {
 
 export default function SideCart({ showCart, setShowCart }: Props) {
   const navigate = useNavigate();
-  const basket = useSelector((state: any) => state.basket);
+  const basket = useSelector((state: any) => state.basket.basket);
 
   return (
     <>

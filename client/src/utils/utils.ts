@@ -43,7 +43,7 @@ export const totalPrice = (
   discount: { percent: number; amount: number },
   quantity:number = 1,
 ) => {
-  return (getDiscount(price, discount)) * quantity;
+  return getDiscount(price, discount) * quantity;
 };
 
 export const formatTotalPrice = (

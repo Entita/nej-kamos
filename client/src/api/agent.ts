@@ -147,8 +147,13 @@ const Account = {
   update: (values: any) => requests.post('account/update', values),
 };
 
-const Payments = {
-  createPayment: () => requests.post('payments', {}),
+const Payment = {
+  create: (values: any) => requests.post('payment', values),
+};
+
+const Transaction = {
+  get: (params: any) => requests.get('transaction', params),
+  create: (values: any) => requests.post('transaction', values),
 };
 
 const agent = {
@@ -157,9 +162,10 @@ const agent = {
   Product,
   Basket,
   Account,
-  Payments,
+  Payment,
   Admin,
   Coupon,
+  Transaction,
 };
 
 export default agent;
