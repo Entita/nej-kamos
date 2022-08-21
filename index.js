@@ -49,7 +49,11 @@ if (app.get('env') === 'development') {
 } else app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', router);
-if (app.get('env') === 'production') app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'client/build', 'index.html')));
+if (app.get('env') === 'production') app.get('*', (req, res) => {
+  console.log(path.join(__dirname, 'client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+// if (app.get('env') === 'production') app.use(express.static(path.join(__dirname, 'client')));
 
 // Server
 const server = require('http').createServer(app);

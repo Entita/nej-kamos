@@ -34,7 +34,7 @@ export default function ProductPage() {
     quantity: basketProduct?.quantity || 0,
   };
 
-  if (!basketProduct) return <NotFound />
+  if (!product) return <NotFound />
 
   return (
     <WrapperStyled>
