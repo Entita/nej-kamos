@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
 import { Icons, toast } from 'react-toastify';
+import { getServerUrl } from '../client/src/utils/utils';
 
-axios.defaults.baseURL = 'http://localhost:3000/api';
+axios.defaults.baseURL = `${getServerUrl()}/api`;
 axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;

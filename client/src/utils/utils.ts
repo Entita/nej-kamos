@@ -1,5 +1,15 @@
-import { Basket } from '../models/client/Basket';
-import { Product } from '../models/client/Product';
+import { Basket } from '../models/Basket';
+import { Product } from '../models/Product';
+
+function getCookie(key: string) {
+  const b = document.cookie.match('(^|;)\\s*' + key + '\\s*=\\s*([^;]+)');
+  return b ? b.pop() : '';
+}
+
+const Cookie = {
+  accountId: () => getCookie('accountId'),
+  basketId: () => getCookie('basketId'),
+};
 
 export const roundNumber = (num: number, scale: number) => {
   return +(Math.round((num + "e+" + scale) as any)  + "e-" + scale);
@@ -43,3 +53,9 @@ export const formatTotalPrice = (
 ) => {
   return totalPrice(price, discount, quantity).toFixed(2);
 };
+
+export const getServerUrl = () => {
+  return process.env.SERVER_URL;
+};
+
+export default Cookie;
