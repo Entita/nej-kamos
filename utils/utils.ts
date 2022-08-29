@@ -43,3 +43,7 @@ export const formatTotalPrice = (
 ) => {
   return totalPrice(price, discount, quantity).toFixed(2);
 };
+
+export const getServerUrl = () => {
+  return process.env.SERVER_URL;
+}

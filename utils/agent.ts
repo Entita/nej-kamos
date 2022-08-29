@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
 import { Icons, toast } from 'react-toastify';
-import { getServerUrl } from '../client/src/utils/utils';
+import { getServerUrl } from './utils';
 
 axios.defaults.baseURL = `${getServerUrl()}/api`;
 axios.defaults.withCredentials = true;
