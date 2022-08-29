@@ -1,3 +1,4 @@
+import { removeCookies, setCookie } from 'cookies-next';
 import { Basket } from '../models/client/Basket';
 import { Product } from '../models/client/Product';
 
@@ -45,5 +46,12 @@ export const formatTotalPrice = (
 };
 
 export const getServerUrl = () => {
-  return process.env.SERVER_URL;
+  return process.env.NEXT_PUBLIC_SERVER_URL;
+}
+
+export const handleCookies = (cookies: any) => {
+  for (const [key, value] of Object.entries(cookies)) {
+    if (value === '') removeCookies(key);
+    else setCookie(key, value);
+  }
 }

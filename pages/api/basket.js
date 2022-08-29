@@ -1,4 +1,3 @@
-import { setCookie } from 'cookies-next';
 import Account from '../../models/Account';
 import Basket from '../../models/Basket';
 import Coupon from '../../models/Coupon';
@@ -116,7 +115,7 @@ export default async (req, res) => {
     method,
   } = req;
   let { cookies } = req;
-  if (Object.keys(cookies).length === 0) cookies = JSON.parse(req.headers.precookie)
+  if (Object.keys(cookies).length === 0 && req.headers.precookie) cookies = JSON.parse(req.headers.precookie)
 
   switch (method) {
     case 'GET':
@@ -163,11 +162,10 @@ export default async (req, res) => {
         }
 
         const basket = await getBasket(basketCookie);
-        setCookie('basketId', basketCookie, { req, res });
 
         res
           .status(200)
-          .json(basket);
+          .json({ data: basket, cookies: { basketId: basketCookie }});
       } catch (err) {
         console.error('Basket => GET', err);
         res.status(200).json({ toast: 'Failed to get basket!', failed: true });

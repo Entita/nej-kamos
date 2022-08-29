@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
 import { Icons, toast } from 'react-toastify';
-import { getServerUrl } from './utils';
+import { getServerUrl, handleCookies } from './utils';
 
 axios.defaults.baseURL = `${getServerUrl()}/api`;
 axios.defaults.withCredentials = true;
@@ -16,6 +16,8 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(
   async (response) => {
+    const cookies = response.data.cookies;
+    if (cookies) handleCookies(cookies);
     if (response.data.toast) {
       toast.dismiss('agentPromise');
       if (response.data.failed) {

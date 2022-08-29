@@ -7,6 +7,7 @@ import { wrapper } from '../redux/store';
 import { refreshBasket} from '../redux/basket';
 import { refreshAccount } from '../redux/account';
 import { TestStyled } from '../styles/index.style';
+import { setCookie } from 'cookies-next';
 
 
 export const getServerSideProps = wrapper.getServerSideProps(
@@ -17,13 +18,15 @@ export const getServerSideProps = wrapper.getServerSideProps(
     delete axios.defaults.headers.common['precookie'];
 
     if (!basket.failed) {
-      store.dispatch(refreshBasket(basket));
+      store.dispatch(refreshBasket(basket.data));
       store.dispatch(refreshAccount(account));
+      if (basket) setCookie('basketId', basket.data._id, { req: context.req, res: context.res });
+      if (account) setCookie('accountId', account._id, { req: context.req, res: context.res });
     };
 
     return {
       props: {
-        basket,
+        basket: basket.data,
         account
       },
     };
@@ -32,6 +35,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
 const Home: NextPage = ({ basket, account }: any) => {
   console.log(basket, account);
+  React.useEffect(() => {
+    const init = async () => {
+      await agent.Basket.get();
+    };
+
+    init();
+  }, [])
 
   return <TestStyled>home</TestStyled>;
 };
