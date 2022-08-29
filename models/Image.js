@@ -15,5 +15,15 @@ const imageSchema = new Schema(
   { timestamps: true },
 );
 
-const Image = mongoose.model('images', imageSchema);
-module.exports = Image;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('images');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('images', imageSchema);
+  }
+};
+
+module.exports = declareModel();

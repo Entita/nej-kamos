@@ -31,5 +31,15 @@ const basketSchema = new Schema(
   { timestamps: true },
 );
 
-const Basket = mongoose.model('baskets', basketSchema);
-module.exports = Basket;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('baskets');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('baskets', basketSchema);
+  }
+};
+
+module.exports = declareModel();

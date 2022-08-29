@@ -95,5 +95,15 @@ const accountSchema = new Schema(
   { timestamps: true },
 );
 
-const Account = mongoose.model("accounts", accountSchema);
-module.exports = Account;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('accounts');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('accounts', accountSchema);
+  }
+};
+
+module.exports = declareModel();

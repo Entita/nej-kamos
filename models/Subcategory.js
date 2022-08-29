@@ -15,5 +15,15 @@ const subCategorySchema = new Schema(
   { timestamps: true },
 );
 
-const SubCategory = mongoose.model('subcategories', subCategorySchema);
-module.exports = SubCategory;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('subcategories');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('subcategories', subCategorySchema);
+  }
+};
+
+module.exports = declareModel();

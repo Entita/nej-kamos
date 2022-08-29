@@ -52,5 +52,15 @@ const productSchema = new Schema(
   { timestamps: true },
 );
 
-const Product = mongoose.model('products', productSchema);
-module.exports = Product;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('products');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('products', productSchema);
+  }
+};
+
+module.exports = declareModel();

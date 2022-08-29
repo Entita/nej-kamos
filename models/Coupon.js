@@ -30,5 +30,15 @@ const couponSchema = new Schema(
   { timestamps: true },
 );
 
-const Coupon = mongoose.model('coupons', couponSchema);
-module.exports = Coupon;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('coupons');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('coupons', couponSchema);
+  }
+};
+
+module.exports = declareModel();

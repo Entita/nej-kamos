@@ -19,5 +19,15 @@ const transactionSchema = new Schema(
   { timestamps: true },
 );
 
-const Transaction = mongoose.model('transactions', transactionSchema);
-module.exports = Transaction;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('transactions');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('transactions', transactionSchema);
+  }
+};
+
+module.exports = declareModel();

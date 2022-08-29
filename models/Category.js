@@ -12,5 +12,15 @@ const categorySchema = new Schema(
   { timestamps: true },
 );
 
-const Category = mongoose.model('categories', categorySchema);
-module.exports = Category;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('categories');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('categories', categorySchema);
+  }
+};
+
+module.exports = declareModel();

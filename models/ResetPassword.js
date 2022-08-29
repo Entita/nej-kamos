@@ -15,5 +15,15 @@ const resetPasswordSchema = new Schema(
   { timestamps: true },
 );
 
-const ResetPassword = mongoose.model('resetpasswords', resetPasswordSchema);
-module.exports = ResetPassword;
+const declareModel = () => {
+  try {
+    const model = mongoose.model('resetpasswords');
+    // model already declared
+    return model;
+  } catch {
+    // declare model
+    return mongoose.model('resetpasswords', resetPasswordSchema);
+  }
+};
+
+module.exports = declareModel();
