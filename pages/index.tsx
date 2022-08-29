@@ -9,7 +9,6 @@ import { refreshAccount } from '../redux/account';
 import { TestStyled } from '../styles/index.style';
 import { setCookie } from 'cookies-next';
 
-
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
     axios.defaults.headers.common['precookie'] = JSON.stringify(context.req.cookies);
@@ -35,13 +34,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
 const Home: NextPage = ({ basket, account }: any) => {
   console.log(basket, account);
-  React.useEffect(() => {
-    const init = async () => {
-      await agent.Basket.get();
-    };
-
-    init();
-  }, [])
 
   return <TestStyled>home</TestStyled>;
 };
