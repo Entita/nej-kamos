@@ -1,4 +1,4 @@
-import agent from "../api/agent";
+import agent from "./agent";
 
 export const isUsernameValid = (username) => {
   return username.length > 5;

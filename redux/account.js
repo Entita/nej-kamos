@@ -35,6 +35,7 @@ export const asyncCreateAccount = async (dispatch, data) => {
         dispatch(refreshAccount(data.data))
         asyncRefreshBasket(dispatch)
       }
+      return data;
     })
     .catch(console.error);
 };

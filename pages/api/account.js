@@ -1,5 +1,5 @@
 import Account from '../../models/Account';
-import { dbConnect, findOneFromMongo } from '../../utils/dbMongo';
+import { dbConnect, findOneFromMongo, UpdateOneFromMongo } from '../../utils/dbMongo';
 import { getBasket, isBasketEmpty } from './basket';
 
 dbConnect();
@@ -36,9 +36,14 @@ const tryLogin = async (username, password) => {
   return await findOneFromMongo(Account, { username, password });
 };
 
+const createAccount = async (data) => {
+  return await Account(data).save();
+};
+
 export default async (req, res) => {
   const {
     method,
+    body,
   } = req;
   let { cookies } = req;
   if (Object.keys(cookies).length === 0 && req.headers.precookie) cookies = JSON.parse(req.headers.precookie);
@@ -98,11 +103,34 @@ export default async (req, res) => {
       }
       break;
     case 'PUT':
+      // register
       try {
-        res.status(200).json({});
+        const { username, password, email, notifications } = body;
+        const basketCookie = cookies.basketId;
+        let newBasketCookie = basketCookie;
+        let newAccountCookie;
+        let accountDb = await createAccount({
+          username,
+          password,
+          email,
+          notifications,
+        });
+        newAccountCookie = accountDb._id;
+    
+        if (basketCookie) {
+          await setBasketToAccount(accountDb._id, basketCookie);
+          accountDb = await getAccount({ _id: accountDb._id });
+        } else {
+          newBasketCookie = accountDb.basketId;
+        }
+        const account = formatAccountData(accountDb);
+        // const emailSent = await sendEmailVerification(accountDb._id, accountDb.email, req.header('Referer'));
+        // if (!emailSent) throw 'Error when sending email';
+    
+        res.status(200).send({ data: account, toast: 'Successfully created an account!', cookie: { accountId: newAccountCookie, basketId: newBasketCookie } })
       } catch (err) {
         console.error('Account => PUT', err);
-        res.status(200).json({ toast: 'Failed to PUT account', failed: true });
+        res.status(200).json({ toast: 'Failed to create an account', failed: true });
       }
       break;
     case 'DELETE':
