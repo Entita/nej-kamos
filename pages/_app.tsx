@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { store } from '../redux/store';
 import { wrapper } from '../redux/store';
-import { GlobalStyle } from '../styles/global.style';
+import { GlobalStyle } from '../global.style';
 import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }: AppProps) {

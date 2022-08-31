@@ -12,30 +12,19 @@ export const account = createSlice({
   initialState,
   reducers: {
     refreshAccount: (state, action) => {
-      if (action.payload) state.account = action.payload;
+      if (action.payload || action.payload === null) state.account = action.payload;
     },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
-      if (action.payload.account) state.basket = action.payload.account.account;
+      if (action.payload.account || action.payload.account === null) state.account = action.payload.account.account;
     }
   },
 });
 
-export const asyncLogout = async (dispatch) => {
-  return await agent.Account.logout()
-    .then((data) => {
-      if (data && !data.failed) {
-        dispatch(refreshAccount())
-        asyncRefreshBasket(dispatch)
-      }
-    })
-    .catch(console.error);
-};
-
 export const asyncRefreshAccount = async (dispatch) => {
   return await agent.Account.get()
-    .then((data) => data && !data.failed && dispatch(refreshAccount(data)))
+    .then((data) => data && !data.failed && dispatch(refreshAccount(data.data)))
     .catch(console.error);
 };
 
@@ -93,6 +82,17 @@ export const asyncLoginAccount = async (dispatch, data) => {
     .catch(console.error);
 };
 
+export const asyncLogout = async (dispatch) => {
+  return await agent.Account.logout()
+    .then((data) => {
+      if (data && !data.failed) {
+        dispatch(refreshAccount(null))
+        asyncRefreshBasket(dispatch)
+      }
+    })
+    .catch(console.error);
+};
+
 export const resendAccountVerification = async (dispatch) => {
   return await agent.Account.resendVerification()
     .then((data) => {
@@ -105,5 +105,7 @@ export const resendAccountVerification = async (dispatch) => {
 };
 
 export const { refreshAccount } = account.actions;
+
+export const selectAccount = (state) => state.account.account;
 
 export default account.reducer;

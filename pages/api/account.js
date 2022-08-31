@@ -12,6 +12,7 @@ const formatAccountData = (dbAccount) => {
   if (!dbAccount) return;
 
   return {
+    _id: dbAccount._id,
     firstname: dbAccount.firstname,
     surname: dbAccount.surname,
     username: dbAccount.username,
@@ -39,16 +40,19 @@ export default async (req, res) => {
   const {
     method,
   } = req;
+  let { cookies } = req;
+  if (Object.keys(cookies).length === 0 && req.headers.precookie) cookies = JSON.parse(req.headers.precookie);
 
   switch (method) {
     case 'GET':
       // Get account data
       try {
-        const accountCookie = req.cookies.accountId;
+        const accountCookie = cookies.accountId;
+        if (!accountCookie) return res.status(200).json();
         const accountDb = await getAccount({ _id: accountCookie });
         const account = formatAccountData(accountDb);
         
-        res.status(200).json(account);
+        res.status(200).json({ data: account });
       } catch (err) {
         console.error('Account => GET', err);
         res.status(200).json({ toast: 'Failed to get account!', failed: true });
@@ -61,7 +65,7 @@ export default async (req, res) => {
         let accountDb = await tryLogin(username, password);
         
         if (accountDb) {
-          const basketCookie = req.cookies.basketId;
+          const basketCookie = cookies.basketId;
           const isAccountBasketEmpty = await isBasketEmpty(accountDb.basketId);
           const isCookieBasketEmpty = await isBasketEmpty(basketCookie);
 
@@ -84,7 +88,7 @@ export default async (req, res) => {
           }
 
           const account = formatAccountData(accountDb);
-          res.send({ data: account, toast: 'Successfully logged in!', cookie: { accountId: accountDb._id, basketId: accountDb.basketId } });
+          return res.send({ data: account, toast: 'Successfully logged in!', custom_cookies: { accountId: accountDb._id, basketId: accountDb.basketId } });
         }
 
         res.status(200).json({ toast: 'Failed to logged in! (Wrong credentials)', failed: true });
@@ -104,7 +108,7 @@ export default async (req, res) => {
     case 'DELETE':
       // logout
       try {
-        res.status(200).send({ toast: 'Successfully logged out!', cookie: { accountId: '', basketId: '' } });
+        res.status(200).send({ toast: 'Successfully logged out!', custom_cookies: { accountId: '', basketId: '' } });
       } catch (err) {
         console.error('Account => DELETE', err);
         res.status(200).json({ toast: 'Failed to logout', failed: true });

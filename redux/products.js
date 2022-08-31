@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 import agent from '../utils/agent';
 
 const initialState = {
@@ -13,6 +14,11 @@ export const products = createSlice({
       state.products = action.payload;
     },
   },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      if (action.payload.products) state.products = action.payload.products.products;
+    }
+  }
 });
 
 export const asyncAddProduct = async (data) => {
@@ -40,5 +46,7 @@ export const getProduct = (products, productId) => {
 }
 
 export const { refreshProducts } = products.actions;
+
+export const selectProducts = (state) => state.products.products;
 
 export default products.reducer;

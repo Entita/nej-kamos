@@ -6,11 +6,6 @@ export const GlobalStyle = createGlobalStyle`
     padding    : 0;
     box-sizing : border-box;
     user-select: none;
-
-    @font-face {
-        font-family: 'Tall Thin';
-        src: url('./fonts/GLECB.ttf') format('truetype'),
-    }
   }
   button {
     cursor: pointer;

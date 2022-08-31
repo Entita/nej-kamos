@@ -15,9 +15,7 @@ const createCategory = async (data) => {
 };
 
 export default async (req, res) => {
-  const {
-    method,
-  } = req;
+  const { method } = req;
 
   switch (method) {
     case 'GET':

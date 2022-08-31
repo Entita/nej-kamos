@@ -1,6 +1,7 @@
 import Account from '../../models/Account';
 import Basket from '../../models/Basket';
 import Coupon from '../../models/Coupon';
+import Product from '../../models/Product';
 import {
   dbConnect,
   UpdateOneFromMongo,
@@ -31,7 +32,7 @@ const formatBasketData = async (dbBasket) => {
   if (!dbBasket) return;
 
   const products = [];
-  for (product of dbBasket.products) {
+  for (var product of dbBasket.products) {
     const dbProduct = await findOneFromMongo(Product, {
       _id: product.productId,
     });
@@ -129,7 +130,6 @@ export default async (req, res) => {
             // with basket
             const account = await getAccount({ _id: accountCookie });
             const basket = await getBasket(account.basketId);
-
             if (basket) {
               basketCookie = account.basketId;
             } else {
@@ -165,7 +165,7 @@ export default async (req, res) => {
 
         res
           .status(200)
-          .json({ data: basket, cookies: { basketId: basketCookie }});
+          .json({ data: basket, custom_cookies: { basketId: basketCookie }});
       } catch (err) {
         console.error('Basket => GET', err);
         res.status(200).json({ toast: 'Failed to get basket!', failed: true });

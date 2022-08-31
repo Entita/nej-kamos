@@ -16,7 +16,7 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(
   async (response) => {
-    const cookies = response.data.cookies;
+    const cookies = response.data.custom_cookies;
     if (cookies) handleCookies(cookies);
     if (response.data.toast) {
       toast.dismiss('agentPromise');
@@ -128,8 +128,8 @@ const Coupon = {
 
 const Account = {
   get: () => requests.get('account'),
-  logout: () => requests.delete('account/logout'),
-  login: (values: any) => requests.post('account/login', values),
+  logout: () => requests.delete('account'),
+  login: (values: any) => requests.post('account', values),
   register: (values: any) => requests.post('account/register', values),
   isUsernameInUse: (values: any) => requests.post('account/isUsernameInUse', values),
   isEmailInUse: (values: any) => requests.post('account/isEmailInUse', values),

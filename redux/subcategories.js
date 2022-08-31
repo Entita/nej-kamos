@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 import agent from '../utils/agent';
 
 const initialState = {
@@ -13,6 +14,11 @@ export const subcategories = createSlice({
       state.subcategories = action.payload;
     },
   },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      if (action.payload.subcategories) state.subcategories = action.payload.subcategories.subcategories;
+    }
+  }
 });
 
 export const asyncAddSubcategories = async (data) => {
@@ -31,5 +37,7 @@ export const asyncRefreshSubcategories = async (dispatch) => {
 };
 
 export const { refreshSubcategories } = subcategories.actions;
+
+export const selectSubcategories = (state) => state.subcategories.subcategories;
 
 export default subcategories.reducer;
