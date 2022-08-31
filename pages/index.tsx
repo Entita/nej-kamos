@@ -14,6 +14,7 @@ import MenuSection from '../components/LandingPage/MenuSection';
 import { refreshCategories } from '../redux/categories';
 import Search from '../components/LandingPage/Search';
 import Support from '../components/Support/Support';
+import Head from 'next/head';
 
 const LandingPageWrapper = styled.div`
   display: flex;
@@ -58,6 +59,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
 const Home: NextPage = () => {
   return (
     <>
+      <Head>
+        <title>Nej kámoš</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+
       <Header />
       <TopSection />
       <LandingPageWrapper>
