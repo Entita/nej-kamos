@@ -129,11 +129,15 @@ export const ProductImageStyled = styled.div<{ imageUrl: String }>`
   filter: contrast(1.1) saturate(1.75);
   width: 2.4rem;
   height: 3.6rem;
+  cursor: pointer;
+
+  &:hover {
+    opacity: .5;
+  }
 `;
 
-export const BasketProductNameStyled = styled.a`
+export const BasketProductNameStyled = styled.span`
   color: black;
-  text-decoration: unset;
   align-self: center;
   width: fit-content;
   cursor: pointer;

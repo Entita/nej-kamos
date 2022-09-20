@@ -2,19 +2,23 @@ import styled, { css } from 'styled-components';
 import { Color } from '../../utils/colors';
 
 export const ProductButtonStyled = styled.button<any>`
-  position: relative;
-  background-color: ${Color.lightRed};
+  background-color: ${Color.green};
   color: white;
-  font-family: 'Tall Thin';
-  padding: 6px 8px;
-  border: none;
-  border-radius: 4px;
-  width: 80px;
-  height: 30px;
-  white-space: nowrap;
-  place-self: flex-end;
+  border-radius: 7px;
+  border: unset;
+  padding: 8px 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-top: auto;
   filter: ${({ disabled }) => disabled && 'saturate(0.5);'};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    filter: opacity(.5);
+  }
 `;
 
 export const ProductError = styled.div`
@@ -47,6 +51,7 @@ export const ProductQuantityWrapper = styled.div<any>`
   display: flex;
   position: relative;
   height: 100%;
+  width: 100%;
   gap: 4px;
   align-items: flex-end;
   justify-content: space-between;
@@ -64,11 +69,17 @@ export const ProductQuantityWrapper = styled.div<any>`
 export const ProductQuantityPlus = styled.div`
   display: flex;
   cursor: pointer;
-  color: ${Color.lightGreen};
+  color: ${Color.green};
+
+  &:hover {
+    filter: opacity(.5);
+  }
 `;
 
-export const ProductQuantityMinus = styled(ProductQuantityPlus)`
-  color: ${Color.lightRed};
+export const ProductQuantityMinus = styled(ProductQuantityPlus)``;
+
+export const ProductQuantityWrapperStyled = styled.div`
+  font-size: 16px;
 `;
 
 export const ProductQuantityStyled = styled.input`
@@ -76,8 +87,13 @@ export const ProductQuantityStyled = styled.input`
   width: 18px;
   height: 20px;
   border: none;
-  border-bottom: 1px solid black;
   background-color: inherit;
+  color: ${Color.green};
+  font-size: 16px;
+`;
+
+export const ProductQuantityTextStyled = styled.span`
+  color: ${Color.green};
 `;
 
 export const ProductErrorText = styled.p`

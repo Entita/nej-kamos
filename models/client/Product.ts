@@ -13,4 +13,5 @@ export interface Product {
   };
   category: string;
   subcategory: string;
+  favorite: boolean;
 }

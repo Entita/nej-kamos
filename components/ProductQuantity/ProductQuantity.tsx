@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {
   ProductQuantityStyled,
@@ -12,10 +14,18 @@ import {
   ProductErrorCancel,
   ProductQuantityMinus,
   ProductQuantityPlus,
+  ProductQuantityWrapperStyled,
+  ProductQuantityTextStyled,
 } from './ProductQuantityLandingPage.style';
 import { RemoveButtonStyled } from './ProductQuantityBasket.style';
 import { Product } from '../../models/client/Product';
-import { asyncBasketDeleteItem, asyncBasketSetItem, asyncBasketAddItem } from '../../redux/basket';
+import {
+  asyncBasketDeleteItem,
+  asyncBasketSetItem,
+  asyncBasketAddItem,
+} from '../../redux/basket';
+import BasketSvg from '../SVG/BasketSvg';
+import { ProductBasketStyled, ProductPageQuantityWrapper } from './ProductQuantityProductPage.style';
 
 function ProductQuantityLandingPage({
   product,
@@ -34,7 +44,8 @@ function ProductQuantityLandingPage({
           disabled={loading}
           onClick={() => addProductInBasket(1)}
         >
-          Add to cart
+          <BasketSvg color='white' size='small' />
+          Do košíku
         </ProductButtonStyled>
       )}
       {product.quantity > 0 && (
@@ -51,23 +62,26 @@ function ProductQuantityLandingPage({
               if (!isValid.error) addingDelay(-1);
             }}
           >
-            <IndeterminateCheckBoxIcon />
+            <RemoveCircleRoundedIcon />
           </ProductQuantityMinus>
-          <ProductQuantityStyled
-            value={quantity}
-            onChange={({ target }) => {
-              const isValid = validateQuantity(target.value);
-              if (isValid.error && isValid.quantity === 0) return;
-              addingDelay(isValid.quantity, true);
-            }}
-          />
+          <ProductQuantityWrapperStyled>
+            <ProductQuantityStyled
+              value={quantity}
+              onChange={({ target }) => {
+                const isValid = validateQuantity(target.value);
+                if (isValid.error && isValid.quantity === 0) return;
+                addingDelay(isValid.quantity, true);
+              }}
+            />
+            <ProductQuantityTextStyled>ks</ProductQuantityTextStyled>
+          </ProductQuantityWrapperStyled>
           <ProductQuantityPlus
             onClick={() => {
               const isValid = validateQuantity(quantity + 1);
               if (!isValid.error) addingDelay(1);
             }}
           >
-            <AddBoxIcon />
+            <AddCircleRoundedIcon />
           </ProductQuantityPlus>
         </ProductQuantityWrapper>
       )}
@@ -107,7 +121,7 @@ function ProductQuantityBasket({
             if (!isValid.error) addingDelay(-1);
           }}
         >
-          <IndeterminateCheckBoxIcon />
+          <RemoveCircleRoundedIcon />
         </ProductQuantityMinus>
         <ProductQuantityStyled
           value={quantity}
@@ -123,7 +137,7 @@ function ProductQuantityBasket({
             if (!isValid.error) addingDelay(1);
           }}
         >
-          <AddBoxIcon />
+          <AddCircleRoundedIcon />
         </ProductQuantityPlus>
       </ProductQuantityWrapper>
     </>
@@ -143,15 +157,16 @@ function ProductQuantityProductPage({
   return (
     <>
       {product.quantity === 0 && (
-        <ProductButtonStyled
+        <ProductBasketStyled
           disabled={loading}
           onClick={() => addProductInBasket(1)}
         >
-          Add to cart
-        </ProductButtonStyled>
+          <BasketSvg color='white' size='small' />
+          Do košíku
+        </ProductBasketStyled>
       )}
       {product.quantity > 0 && (
-        <ProductQuantityWrapper disabled={loading}>
+        <ProductPageQuantityWrapper disabled={loading}>
           {error && (
             <ProductError>
               <ProductErrorText>{error}</ProductErrorText>
@@ -182,7 +197,7 @@ function ProductQuantityProductPage({
           >
             <AddBoxIcon />
           </ProductQuantityPlus>
-        </ProductQuantityWrapper>
+        </ProductPageQuantityWrapper>
       )}
     </>
   );

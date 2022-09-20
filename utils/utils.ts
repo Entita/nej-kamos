@@ -1,4 +1,4 @@
-import { removeCookies, setCookie } from 'cookies-next';
+import { deleteCookie, setCookie } from 'cookies-next';
 import { Basket } from '../models/client/Basket';
 import { Product } from '../models/client/Product';
 
@@ -51,7 +51,23 @@ export const getServerUrl = () => {
 
 export const handleCookies = (cookies: any) => {
   for (const [key, value] of Object.entries(cookies)) {
-    if (value === '') removeCookies(key);
+    if (value === '') deleteCookie(key);
     else setCookie(key, value);
   }
 }
+
+export const addQuantityToProducts = (
+  basketProducts: any,
+  products: Array<Product>,
+) => {
+  const productsWithQuantity: Array<Product> = [];
+  products.forEach((product) => {
+    const basketProduct = basketProducts.filter(
+      (basketProduct: Product) => basketProduct._id === product._id,
+    )[0];
+    const basketQuantity = basketProduct ? basketProduct.quantity : 0;
+    productsWithQuantity.push({ ...product, quantity: basketQuantity });
+  });
+
+  return productsWithQuantity;
+};

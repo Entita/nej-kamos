@@ -1,15 +1,17 @@
 import styled from 'styled-components';
 
 export const WrapperStyled = styled.div`
-  position: relative;
+  position: absolute;
+  left: -20rem;
+  top: -5rem;
   display: flex;
   justify-content: center;
 `;
 
 export const LogoWrapperStyled = styled.div`
   position: absolute;
-  top: 2rem;
-  left: 50%;
+  top: 8rem;
+  left: calc(50% + 4rem);
   transform: translateX(-50%);
   z-index: 1;
 `;
@@ -24,6 +26,13 @@ export const LogoCircleStyled = styled.div`
   height: 192px;
   border-radius: 50%;
   padding-top: 7.5%;
+  cursor: pointer;
+
+  &:hover {
+    &::before {
+      background-color: transparent;
+    }
+  }
 
   &::before {
     content: '';
@@ -35,26 +44,7 @@ export const LogoCircleStyled = styled.div`
     border-radius: 50%;
     z-index: -1;
     background-color: rgba(0, 0, 0, 0.3);
-    filter: blur(2px);
-  }
-`;
-
-export const LogoLineStyled = styled.div`
-  position: relative;
-  background-color: white;
-  border-radius: 4px;
-  height: 4px;
-  width: 60px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    height: 5px;
-    width: 60px;
-    z-index: -1;
-    background-color: rgba(0, 0, 0, 0.3);
+    transition: background-color .3s ease;
     filter: blur(2px);
   }
 `;
@@ -69,24 +59,4 @@ export const LogoHorizontalWrapperStyled = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-`;
-
-export const LogoTextWrapperStyled = styled.div`
-  text-align: center;
-`;
-
-export const LogoTextStyled = styled.span`
-  font-family: 'Raleway';
-  font-size: 36px;
-  color: white;
-
-  font-weight: 200;
-`;
-
-export const LogoBoldTextStyled = styled.span`
-  font-family: 'Raleway', sans-serif;
-  font-size: 36px;
-  color: white;
-
-  font-weight: 700;
 `;

@@ -7,21 +7,11 @@ export const WrapperStyled = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
   padding: 6px 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    box-shadow: 0px 4px 4px rgb(0 0 0 / 10%);
-  }
 `;
 
-export const CategoryStyled = styled.span`
+export const CategoryStyled = styled.a`
   color: black;
   cursor: pointer;
 

@@ -3,7 +3,7 @@ import { Color } from '../../utils/colors';
 
 export const WrapperStyled = styled.div`
   display: flex;
-  position: absolute;
+  position: fixed;
   top: 1rem;
   right: 1rem;
   gap: 8px;

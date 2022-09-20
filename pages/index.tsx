@@ -9,12 +9,14 @@ import { refreshBasket } from '../redux/basket';
 import { refreshAccount } from '../redux/account';
 import { setCookie } from 'cookies-next';
 import Header from '../components/Header/Header';
-import TopSection from '../components/LandingPage/TopSection';
+import TopLogo from '../components/LandingPage/TopLogo';
 import MenuSection from '../components/LandingPage/MenuSection';
 import { refreshCategories } from '../redux/categories';
 import Search from '../components/LandingPage/Search';
 import Support from '../components/Support/Support';
 import Head from 'next/head';
+import { refreshProducts } from '../redux/products';
+import ProductsSection from '../components/LandingPage/ProductsSection';
 
 const LandingPageWrapper = styled.div`
   display: flex;
@@ -31,11 +33,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const basket = await agent.Basket.get();
     const account = await agent.Account.get();
     const categories = await agent.Category.get();
+    const products = await agent.Product.get();
     delete axios.defaults.headers.common['precookie'];
 
     if (!basket.failed) {
       store.dispatch(refreshBasket(basket.data));
       store.dispatch(refreshCategories(categories));
+      store.dispatch(refreshProducts(products));
       if (basket)
         setCookie('basketId', basket.data._id, {
           req: context.req,
@@ -65,10 +69,11 @@ const Home: NextPage = () => {
       </Head>
 
       <Header />
-      <TopSection />
+      <TopLogo />
       <LandingPageWrapper>
         <MenuSection />
         <Search />
+        <ProductsSection section='Doporučené' />
       </LandingPageWrapper>
       <Support />
     </>

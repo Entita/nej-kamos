@@ -19,13 +19,20 @@ import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 import { useDispatch } from 'react-redux';
 import SideBasket from './SideBasket';
+import { changeShowBasket, selectStates } from '../../redux/states';
 
 export default function Header() {
+  const states = useSelector(selectStates);
   const [modal, setModal] = React.useState<string>('');
-  const [showBasket, setShowBasket] = React.useState<boolean>(false);
+  const [showBasket, setShowBasket] = React.useState<boolean>(states.showBasket);
   const basket = useSelector(selectBasket);
   const account = useSelector(selectAccount);
   const dispatch = useDispatch();
+  
+  const toggleBasket = (state: boolean) => {
+    changeShowBasket(dispatch, state);
+    setShowBasket(state);
+  }
 
   const logout = async () => {
     await asyncLogout(dispatch);
@@ -33,7 +40,7 @@ export default function Header() {
 
   return (
     <>
-      <SideBasket showBasket={showBasket} setShowBasket={setShowBasket} />
+      <SideBasket showBasket={showBasket} setShowBasket={toggleBasket} />
       <WrapperStyled>
       {account ? (
           <>
@@ -46,7 +53,7 @@ export default function Header() {
             <LoginButtonStyled onClick={() => setModal('login')}>přihlášení</LoginButtonStyled>
           </>
         )}
-        <BasketWrapperStyled onClick={() => setShowBasket(!showBasket)}>
+        <BasketWrapperStyled onClick={() => toggleBasket(!showBasket)}>
           <BasketNumberWrapperStyled>
             <BasketNumberStyled>{basket?.products.length || 0}</BasketNumberStyled>
           </BasketNumberWrapperStyled>

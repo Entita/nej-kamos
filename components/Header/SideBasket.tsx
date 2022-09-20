@@ -1,8 +1,6 @@
 import React from 'react'
 import Router from 'next/router';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import BasketSvg from '../SVG/BasketSvg';
 import { useSelector } from 'react-redux';
 import { selectBasket } from '../../redux/basket';
@@ -41,8 +39,8 @@ export default function SideBasket({ showBasket, setShowBasket }: { showBasket: 
       <BasketBodyStyled>
         {basket.products.map((product: Product, index: number) =>
           <BasketProductStyled key={index}>
-            <ProductImageStyled imageUrl={getServerUrl() + product.imageUrl} />
-            <BasketProductNameStyled href={`/product/${product._id}`}>
+            <ProductImageStyled onClick={() => Router.push(`/product/${product._id}`)} imageUrl={getServerUrl() + product.imageUrl} />
+            <BasketProductNameStyled onClick={() => Router.push(`/product/${product._id}`)}>
               {product.name}
             </BasketProductNameStyled>
             <BasketProductPriceStyled>

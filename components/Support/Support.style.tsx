@@ -3,22 +3,9 @@ import { Color } from '../../utils/colors';
 
 export const WrapperStyled = styled.div`
   position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 12px;
   bottom: 2rem;
   right: 2rem;
-  width: 5.4rem;
-  height: 3rem;
-  border-radius: 14px;
-  background-color: ${Color.mainRed};
-  box-shadow: 3px 3px 7px -3px black;
-  cursor: pointer;
-
-  &:hover {
-    filter: opacity(.5);
-  }
+  z-index: 10;
 `;
 
 export const NotificationNumberWrapperStyled = styled.div`
@@ -37,4 +24,21 @@ export const NotificationNumberWrapperStyled = styled.div`
 export const NotificationNumberStyled = styled.span`
   color: ${Color.mainRed};
   font-weight: bold;
+`;
+
+export const SupportButtonStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 5.4rem;
+  height: 3rem;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background-color: ${Color.mainRed};
+  box-shadow: 3px 3px 7px -3px black;
+  cursor: pointer;
+
+  &:hover {
+    filter: opacity(.5);
+  }
 `;
