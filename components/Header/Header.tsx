@@ -21,9 +21,8 @@ import { useDispatch } from 'react-redux';
 import SideBasket from './SideBasket';
 import { changeShowBasket, selectStates } from '../../redux/states';
 
-export default function Header() {
+export default function Header({ modal, setModal }: { modal: string, setModal: Function }) {
   const states = useSelector(selectStates);
-  const [modal, setModal] = React.useState<string>('');
   const [showBasket, setShowBasket] = React.useState<boolean>(states.showBasket);
   const basket = useSelector(selectBasket);
   const account = useSelector(selectAccount);

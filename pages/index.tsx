@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import agent from '../utils/agent';
 import { wrapper } from '../redux/store';
 import { refreshBasket } from '../redux/basket';
-import { refreshAccount } from '../redux/account';
+import { refreshAccount, selectAccount } from '../redux/account';
 import { setCookie } from 'cookies-next';
 import Header from '../components/Header/Header';
 import TopLogo from '../components/LandingPage/TopLogo';
@@ -15,8 +15,11 @@ import { refreshCategories } from '../redux/categories';
 import Search from '../components/LandingPage/Search';
 import Support from '../components/Support/Support';
 import Head from 'next/head';
-import { refreshProducts } from '../redux/products';
+import { refreshProducts, selectProducts } from '../redux/products';
 import ProductsSection from '../components/LandingPage/ProductsSection';
+import { useSelector } from 'react-redux';
+import { Product } from '../models/client/Product';
+import Notification from '../components/Notification/Notification';
 
 const LandingPageWrapper = styled.div`
   display: flex;
@@ -61,6 +64,17 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const Home: NextPage = () => {
+  const [modal, setModal] = React.useState<string>('');
+  const [showNotification, setShowNotification] = React.useState<boolean>(false);
+  const account = useSelector(selectAccount);
+  const products = useSelector(selectProducts);
+
+  const getFavoriteProducts = () => {
+    if (!account) return [];
+
+    return products.filter((product: Product) => account.favorites.includes(product._id));
+  };
+
   return (
     <>
       <Head>
@@ -68,12 +82,15 @@ const Home: NextPage = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <Header />
+      {showNotification && <Notification setShow={setShowNotification} setModal={setModal} />}
+
+      <Header modal={modal} setModal={setModal} />
       <TopLogo />
       <LandingPageWrapper>
         <MenuSection />
         <Search />
-        <ProductsSection section='Doporučené' />
+        <ProductsSection setShowNotification={setShowNotification} products={getFavoriteProducts()} section='Oblíbené' />
+        <ProductsSection setShowNotification={setShowNotification} products={products} section='Doporučené' />
       </LandingPageWrapper>
       <Support />
     </>

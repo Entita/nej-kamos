@@ -1,9 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Product } from '../../models/client/Product';
+import { selectAccount } from '../../redux/account';
 import { selectBasket } from '../../redux/basket';
 import { selectProducts } from '../../redux/products';
 import { addQuantityToProducts, totalPrice } from '../../utils/utils';
+import Notification from '../Notification/Notification';
 import ProductItem from './ProductItem';
 import {
   ProductsWrapperStyled,
@@ -51,15 +53,16 @@ const orders: any = [
   },
 ];
 
-export default function ProductsSection({ section }: { section: String }) {
+export default function ProductsSection({ setShowNotification, products, section }: { setShowNotification: Function, products: Array<Product>,section: String }) {
   const [sortFunc, setSortFunc] = React.useState<Function>(orders[0].func);
   const basket = useSelector(selectBasket);
-  const products = useSelector(selectProducts);
   const productsWithQuantity = React.useMemo(
     () => addQuantityToProducts(basket.products, products),
     [products, basket],
   );
   const sortedProductsWithQuantity = sortFunc(productsWithQuantity);
+
+  if (products.length === 0) return <></>
 
   return (
     <WrapperStyled>
@@ -89,7 +92,7 @@ export default function ProductsSection({ section }: { section: String }) {
       </SectionHeaderStyled>
       <ProductsWrapperStyled>
         {sortedProductsWithQuantity.map((product: Product, index: number) => (
-          <ProductItem product={product} key={index} />
+          <ProductItem setShowNotification={setShowNotification} product={product} key={index} />
         ))}
       </ProductsWrapperStyled>
     </WrapperStyled>

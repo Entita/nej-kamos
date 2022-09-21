@@ -19,5 +19,6 @@ export interface Account {
   notifications: {
     news: boolean,
     marketing: boolean,
-  }
+  },
+  favorites: Array<string>,
 }

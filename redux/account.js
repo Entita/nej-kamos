@@ -105,6 +105,22 @@ export const resendAccountVerification = async (dispatch) => {
     .catch(console.error);
 };
 
+export const asyncFavoriteProductToAccount = async (dispatch, data) => {
+  return await agent.Account.favorite(data)
+    .then((data) => {
+      if (data && !data.failed) dispatch(refreshAccount(data.data));
+    })
+    .catch(console.error);
+};
+
+export const asyncUnfavoriteProductToAccount = async (dispatch, data) => {
+  return await agent.Account.unfavorite(data)
+    .then((data) => {
+      if (data && !data.failed) dispatch(refreshAccount(data.data));
+    })
+    .catch(console.error);
+};
+
 export const { refreshAccount } = account.actions;
 
 export const selectAccount = (state) => state.account.account;

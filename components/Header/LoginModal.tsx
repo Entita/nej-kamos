@@ -28,14 +28,20 @@ export default function LoginModal({ setModal }: { setModal: Function }) {
     
     await asyncLoginAccount(dispatch, { username, password })
       .then((data) => {
-        if (data) setCartReplaceData(data)
-        setModal('');
+        if (data) {
+          setCartReplaceData(data);
+          setUsername('');
+          setPassword('');
+        } else {
+          setModal('');
+        }
       });
   }
 
   if (cartReplaceData)
     return (
       <CartReplace
+        setModal={setModal}
         setCartReplaceData={setCartReplaceData}
         accountId={cartReplaceData.accountId}
         accountBasket={cartReplaceData.accountBasket}

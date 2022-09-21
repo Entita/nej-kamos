@@ -29,6 +29,7 @@ export default async (req, res) => {
   switch (method) {
     case 'GET':
       try {
+        // Get products
         const dbProducts = await getCollectionFromMongo(Product);
         const filteredProducts = dbProducts.map(
           ({ _id, name, price, discount, imageUrl, brand, description, category, subcategory, stock }) => {
@@ -44,6 +45,7 @@ export default async (req, res) => {
       break;
     case 'POST':
       try {
+        // Create product
         const { name, price, brand, category, subcategory, stock, discount, description } = req.body;
         const filePicture = req.files.picture;
         const fileName = filePicture.name;
@@ -113,6 +115,7 @@ export default async (req, res) => {
       break;
     case 'DELETE':
       try {
+        // Delete product
         res.status(200).json({});
       } catch (err) {
         console.error('Product => DELETE', err);

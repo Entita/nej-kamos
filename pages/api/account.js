@@ -4,11 +4,11 @@ import { getBasket, isBasketEmpty } from './basket';
 
 dbConnect();
 
-const getAccount = async (filter) => {
+export const getAccount = async (filter) => {
   return await findOneFromMongo(Account, filter);
 };
 
-const formatAccountData = (dbAccount) => {
+export const formatAccountData = (dbAccount) => {
   if (!dbAccount) return;
 
   return {
@@ -25,10 +25,11 @@ const formatAccountData = (dbAccount) => {
     transactionIds: dbAccount.transactionIds,
     address: dbAccount.address,
     notifications: dbAccount.notifications,
+    favorites: dbAccount.favorites,
   };
 };
 
-const setBasketToAccount = async (accountId, basketId) => {
+export const setBasketToAccount = async (accountId, basketId) => {
   return await UpdateOneFromMongo(Account, { _id: accountId }, { basketId });
 };
 
@@ -66,7 +67,7 @@ export default async (req, res) => {
     case 'POST':
       // login
       try {
-        const { username, password } = req.body;
+        const { username, password } = body;
         let accountDb = await tryLogin(username, password);
         
         if (accountDb) {

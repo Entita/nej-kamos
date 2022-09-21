@@ -43,6 +43,8 @@ import {
   WrapperStyled,
 } from './ProductItem.style';
 import ProductQuantity from '../ProductQuantity/ProductQuantity';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAccount, asyncUnfavoriteProductToAccount, asyncFavoriteProductToAccount } from '../../redux/account';
 
 const sections = [
   {
@@ -61,14 +63,27 @@ const sections = [
 
 export default function ProductItem({ product }: { product: Product }) {
   const [selectedSection, setSelectedSection] = React.useState<{ name: string, component: any }>(sections[0]);
+  const account = useSelector(selectAccount);
+  const dispatch = useDispatch();
+  const isProductFavorite = React.useMemo(
+    () => account && account.favorites.includes(product._id),
+    [account],
+  );
+
+  const toggleFavorite = async () => {
+    if (!account) return;
+
+    if (isProductFavorite) await asyncUnfavoriteProductToAccount(dispatch, { productId: product._id });
+    else await asyncFavoriteProductToAccount(dispatch, { productId: product._id });
+  }
 
   return (
     <WrapperStyled>
       <ProductWrapperStyled>
         <ProductImageWrapperStyled>
           <ProductImageStyled imageUrl={getServerUrl() + product.imageUrl} />
-          <ProductFavoriteStyled>
-            {product.favorite ? (
+          <ProductFavoriteStyled onClick={toggleFavorite}>
+            {isProductFavorite ? (
               <FavoriteIcon color='error' />
             ) : (
               <FavoriteBorderIcon color='error' />

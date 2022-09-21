@@ -65,6 +65,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const Home: NextPage = () => {
+  const [modal, setModal] = React.useState<string>('');
   const router = useRouter();
   const productId = React.useMemo(
     () => router.query.id && router.query.id[0],
@@ -88,7 +89,7 @@ const Home: NextPage = () => {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
 
-      <Header />
+      <Header modal={modal} setModal={setModal} />
       <CornerLogo />
       <LandingPageWrapper>
         <MenuSection />

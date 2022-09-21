@@ -26,6 +26,7 @@ import { Basket } from '../../models/client/Basket';
 import { Product } from '../../models/client/Product';
 
 interface Props {
+  setModal: Function;
   setCartReplaceData: Function;
   accountId: string,
   accountBasket: Basket;
@@ -56,18 +57,21 @@ function CartReplaceBasket({ products }: { products: Array<Product> }) {
 }
 
 export default function CartReplace({
+  setModal,
   setCartReplaceData,
   accountId,
   accountBasket,
   cookieBasket,
 }: Props) {
-
   const bgRef = React.useRef(null);
   const dispatch = useDispatch();
 
   const replaceBasket = async (basketId: string) => {
     await asyncAccountReplaceBasket(dispatch, { accountId, basketId })
-      .then(() => setCartReplaceData(null));
+      .then(() => {
+        setCartReplaceData(null);
+        setModal('');
+      });
   };
 
   return (

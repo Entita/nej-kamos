@@ -1,5 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Product } from '../../models/client/Product';
@@ -19,13 +20,28 @@ import {
 } from './ProductItem.style';
 import { formatTotalPrice, getServerUrl } from '../../utils/utils';
 import ProductQuantity from '../ProductQuantity/ProductQuantity';
+import { asyncFavoriteProductToAccount, asyncUnfavoriteProductToAccount, selectAccount } from '../../redux/account';
 
-export default function ProductItem({ product }: { product: Product }) {
+export default function ProductItem({ product, setShowNotification }: { product: Product, setShowNotification: Function }) {
+  const account = useSelector(selectAccount);
+  const dispatch = useDispatch();
+  const isProductFavorite = React.useMemo(
+    () => account && account.favorites.includes(product._id),
+    [account],
+  );
+
+  const toggleFavorite = async () => {
+    if (!account) return setShowNotification(true);
+
+    if (isProductFavorite) await asyncUnfavoriteProductToAccount(dispatch, { productId: product._id });
+    else await asyncFavoriteProductToAccount(dispatch, { productId: product._id });
+  }
+
   return (
     <ProductWrapperStyled>
       <ProductTopWrapperStyled>
-        <ProductFavoriteStyled>
-          {product.favorite ? (
+        <ProductFavoriteStyled onClick={toggleFavorite}>
+          {isProductFavorite ? (
             <FavoriteIcon color='error' />
           ) : (
             <FavoriteBorderIcon color='error' />

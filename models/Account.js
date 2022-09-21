@@ -91,6 +91,10 @@ const accountSchema = new Schema(
       },
       required: true,
     },
+    favorites: {
+      type: [String],
+      default: [],
+    }
   },
   { timestamps: true },
 );
