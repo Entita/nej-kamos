@@ -4,23 +4,6 @@ const initialState = {
   states: {
     showBasket: false,
     showChat: false,
-    chat: [
-      {
-        name: 'YOU',
-        createdAt: '13:36',
-        text: 'Can i get some help over here?',
-      },
-      {
-        name: 'SUPPORT',
-        createdAt: '13:30',
-        text: 'BBLFDB BDF BDFBFDLFBDB BFD',
-      },
-      {
-        name: 'SUPPORT',
-        createdAt: '13:24',
-        text: 'FDSFNSD FDS FSD FSDDSFSDFDS FSD F SDFSD',
-      },
-    ],
   },
 };
 
@@ -44,13 +27,6 @@ export const changeShowBasket = (dispatch, state) => {
 export const changeShowChat = (dispatch, state) => {
   dispatch(changeState({
     name: 'showChat',
-    value: state,
-  }))
-};
-
-export const changeChat = (dispatch, state) => {
-  dispatch(changeState({
-    name: 'chat',
     value: state,
   }))
 };

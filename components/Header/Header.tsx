@@ -20,6 +20,7 @@ import RegisterModal from './RegisterModal';
 import { useDispatch } from 'react-redux';
 import SideBasket from './SideBasket';
 import { changeShowBasket, selectStates } from '../../redux/states';
+import ForgottenPasswordModal from './ForgottenPasswordModal';
 
 export default function Header({ modal, setModal }: { modal: string, setModal: Function }) {
   const states = useSelector(selectStates);
@@ -61,6 +62,7 @@ export default function Header({ modal, setModal }: { modal: string, setModal: F
       </WrapperStyled>
       {modal === 'login' && <LoginModal setModal={setModal} />}
       {modal === 'register' && <RegisterModal setModal={setModal} />}
+      {modal === 'forgotten_password' && <ForgottenPasswordModal setModal={setModal} />}
     </>
   );
 }

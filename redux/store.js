@@ -4,6 +4,7 @@ import accountReducer from './account';
 import productsReducer from './products';
 import categoriesReducer from './categories';
 import subcategoriesReducer from './subcategories';
+import supportChatReducer from './support_chat';
 import statesReducer from './states';
 import { createWrapper } from 'next-redux-wrapper';
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     products: productsReducer,
     categories: categoriesReducer,
     subcategories: subcategoriesReducer,
+    support_chat: supportChatReducer,
     states: statesReducer,
   },
   devTools: true,

@@ -18,31 +18,23 @@ import {
   WrapperStyled,
 } from './SupportChat.style';
 import { useSelector } from 'react-redux';
-import { changeChat, selectStates } from '../../redux/states';
 import { useDispatch } from 'react-redux';
+import { asyncAddSupportChat, selectSupportChat } from '../../redux/support_chat';
 
 export default function SupportChat({ setShow }: { setShow: Function }) {
-  const states = useSelector(selectStates);
   const [message, setMessage] = React.useState<string>('');
-  const [support, setSupport] = React.useState({
+  const supportChat = useSelector(selectSupportChat);
+  const support = React.useMemo(() => ({
     name: 'Martin',
-    chat: states.chat,
-  });
+    chat: supportChat
+  }), [supportChat]);
   const dispatch = useDispatch();
 
   const sendMessage = () => {
-    const newChat = [
-      {
-        name: 'YOU',
-        createdAt: '14:99',
-        text: message,
-      },
-      ...support.chat,
-    ];
-    changeChat(dispatch, newChat);
-    setSupport({
-      ...support,
-      chat: newChat,
+    asyncAddSupportChat(dispatch, {
+      name: 'YOU',
+      createdAt: '14:99',
+      text: message,
     });
     setMessage('');
   };

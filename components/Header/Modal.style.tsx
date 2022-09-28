@@ -15,6 +15,7 @@ export const WrapperStyled = styled.div`
 `;
 
 export const ModalWrapperStyled = styled.div`
+  position: relative;
   width: 500px;
   background-color: white;
   padding: 1.2rem 2rem;
@@ -72,5 +73,24 @@ export const ModalButtonStyled = styled.button`
 
   &:hover {
     filter: opacity(.5);
+  }
+`;
+
+export const LoadingStyled = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  backdrop-filter: brightness(.8);
+
+  & > div {
+    width: 60px;
+    height: 60px;
+    border-width: 6px;
   }
 `;

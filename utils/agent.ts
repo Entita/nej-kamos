@@ -35,7 +35,7 @@ axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    const { status } = error.response!;
+    const { status } = error.response! || {};
     let errorMessage = '';
 
     switch (status) {
@@ -138,7 +138,7 @@ const Account = {
   // isEmailInUse: (values: any) => requests.post('account/isEmailInUse', values),
   // resendVerification: (values: any) => requests.post('account/resendVerification', values),
   // verify: (values: any) => requests.post('account/verify', values),
-  // resetPassword: (values: any) => requests.post('account/resetPassword', values),
+  resetPassword: (values: any) => requests.post('account/forgotten_password', values),
   // resetPasswordVerify: (values: any) => requests.post('account/resetPasswordVerify', values),
   // changePassword: (values: any) => requests.post('account/changePassword', values),
   // update: (values: any) => requests.post('account/update', values),
@@ -146,6 +146,11 @@ const Account = {
 
 const Payment = {
   create: (values: any) => requests.post('payment', values),
+};
+
+const Support = {
+  get: () => requests.get('support_chat'),
+  add: (values: any) => requests.post('support_chat', values),
 };
 
 const Transaction = {
@@ -163,6 +168,7 @@ const agent = {
   Admin,
   Coupon,
   Transaction,
+  Support,
 };
 
 export default agent;

@@ -64,7 +64,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   },
 );
 
-const Home: NextPage = () => {
+const ProductPage: NextPage = () => {
   const [modal, setModal] = React.useState<string>('');
   const router = useRouter();
   const productId = React.useMemo(
@@ -87,6 +87,7 @@ const Home: NextPage = () => {
       <Head>
         <title>{`Nej kámoš${product ? ` - ${product.name}` : ' - Produkt nenalezen'}`}</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+        <link rel="shortcut icon" href="../images/favicon.ico" />
       </Head>
 
       <Header modal={modal} setModal={setModal} />
@@ -101,4 +102,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default ProductPage;
