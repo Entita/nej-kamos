@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { selectAccount } from '../../redux/account';
 import { WrapperStyled } from './HistoryOfOrders.style'
+import Order from './Order';
 
 export default function HistoryOfOrders() {
   const { transactions } = useSelector(selectAccount);
@@ -9,11 +10,7 @@ export default function HistoryOfOrders() {
   return (
     <WrapperStyled>
       {transactions.map((transaction: any, index: number) => 
-        <div key={index}>
-          <span>{transaction._id}</span>
-          <span>{transaction.type}</span>
-          <span>{transaction.status}</span>
-        </div>
+        <Order key={index} transaction={transaction} />
       )}
     </WrapperStyled>
   )
