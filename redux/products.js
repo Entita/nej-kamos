@@ -33,13 +33,23 @@ export const asyncRefreshProducts = async (dispatch) => {
 };
 
 export const filterProducts = (products, query) => {
-  const category = query.get('category');
-  const subcategory = query.get('subcategory');
+  const category = query.category;
+  const subcategory = query.subcategory;
 
   if (!category) return products;
+  if (category === 'discount') return getDiscountedProducts(products);
+  if (category === 'new') return getNewProducts(products);
   if (!subcategory) return products.filter((product) => product.category === category);
   return products.filter((product) => product.subcategory === subcategory && product.category === category);
 };
+
+export const getDiscountedProducts = (products) => {
+  return products.filter((product) => product.discount);
+}
+
+export const getNewProducts = (products) => {
+  return products;
+}
 
 export const getProduct = (products, productId) => {
   return products.filter((product) => product._id === productId)[0];

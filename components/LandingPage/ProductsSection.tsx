@@ -1,15 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Product } from '../../models/client/Product';
-import { selectAccount } from '../../redux/account';
 import { selectBasket } from '../../redux/basket';
-import { selectProducts } from '../../redux/products';
 import { addQuantityToProducts, totalPrice } from '../../utils/utils';
-import Notification from '../Notification/Notification';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ProductItem from './ProductItem';
 import {
   ProductsWrapperStyled,
   SectionHeaderStyled,
+  SectionOrderOptionButtonWrapperStyled,
   SectionOrderOptionStyled,
   SectionOrderSelectStyled,
   SectionOrderTitleStyled,
@@ -88,6 +88,10 @@ export default function ProductsSection({ setShowNotification, products, section
               ),
             )}
           </SectionOrderSelectStyled>
+          <SectionOrderOptionButtonWrapperStyled>
+            <ArrowDropUpIcon />
+            <ArrowDropDownIcon />
+          </SectionOrderOptionButtonWrapperStyled>
         </SectionOrderWrapperStyled>
       </SectionHeaderStyled>
       <ProductsWrapperStyled>

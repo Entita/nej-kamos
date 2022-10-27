@@ -18,7 +18,7 @@ export default async (req, res) => {
         if (!accountDb && !basketId) throw '';
 
         await setBasketToAccount(accountId, basketId);
-        const account = formatAccountData(accountDb);
+        const account = await formatAccountData(accountDb);
         res.status(200).send({ data: account, toast: 'Successfully logged in!', custom_cookies: { accountId, basketId } });
       } catch (err) {
         console.error('Account Replace Basket => POST', err);

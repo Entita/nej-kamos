@@ -44,7 +44,7 @@ export default function Header({ modal, setModal }: { modal: string, setModal: F
       <WrapperStyled>
       {account ? (
           <>
-            <AccountButtonStyled onClick={() => Router.push('/basket')}>můj účet</AccountButtonStyled>
+            <AccountButtonStyled onClick={() => Router.push('/account')}>můj účet</AccountButtonStyled>
             <LogoutButtonStyled onClick={logout}>odhlásit se</LogoutButtonStyled>
           </>
         ) : (

@@ -15,12 +15,13 @@ import { refreshCategories } from '../redux/categories';
 import Search from '../components/LandingPage/Search';
 import Support from '../components/Support/Support';
 import Head from 'next/head';
-import { refreshProducts, selectProducts } from '../redux/products';
+import { filterProducts, refreshProducts, selectProducts } from '../redux/products';
 import ProductsSection from '../components/LandingPage/ProductsSection';
 import { useSelector } from 'react-redux';
 import { Product } from '../models/client/Product';
 import Notification from '../components/Notification/Notification';
 import { refreshSupportChat } from '../redux/support_chat';
+import { useRouter } from 'next/router';
 
 const LandingPageWrapper = styled.div`
   display: flex;
@@ -67,15 +68,17 @@ export const getServerSideProps = wrapper.getServerSideProps(
 );
 
 const Home: NextPage = () => {
+  const { query } = useRouter();
   const [modal, setModal] = React.useState<'' | 'login' | 'register' | 'forgotten_password'>('');
   const [showNotification, setShowNotification] = React.useState<boolean>(false);
   const account = useSelector(selectAccount);
   const products = useSelector(selectProducts);
+  const filteredProducts = filterProducts(products, query);
 
   const getFavoriteProducts = () => {
     if (!account) return [];
 
-    return products.filter((product: Product) => account.favorites.includes(product._id));
+    return filteredProducts.filter((product: Product) => account.favorites.includes(product._id));
   };
 
   return (
@@ -94,7 +97,7 @@ const Home: NextPage = () => {
         <MenuSection />
         <Search />
         <ProductsSection setShowNotification={setShowNotification} products={getFavoriteProducts()} section='Oblíbené' />
-        <ProductsSection setShowNotification={setShowNotification} products={products} section='Doporučené' />
+        <ProductsSection setShowNotification={setShowNotification} products={filteredProducts} section='Doporučené' />
       </LandingPageWrapper>
       <Support />
     </>

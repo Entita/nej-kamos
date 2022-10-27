@@ -25,6 +25,7 @@ const setItemToBasket = async (basketId, product) => {
 
 export const getBasket = async (id) => {
   const dbBasket = await findOneFromMongo(Basket, { _id: id });
+
   return await formatBasketData(dbBasket);
 };
 

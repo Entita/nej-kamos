@@ -28,7 +28,7 @@ export default async (req, res) => {
         
         await addProductToAccountFavorites(accountCookie, productId);
         const accountDb = await getAccount({ _id: accountCookie });
-        const account = formatAccountData(accountDb);
+        const account = await formatAccountData(accountDb);
         res.status(200).json({ data: account });
       } catch (err) {
         console.error('Account Favorite => POST', err);
@@ -42,7 +42,7 @@ export default async (req, res) => {
 
         await removeProductFromAccountFavorites(accountCookie, productId);
         const accountDb = await getAccount({ _id: accountCookie });
-        const account = formatAccountData(accountDb);
+        const account = await formatAccountData(accountDb);
         res.status(200).json({ data: account });
       } catch (err) {
         console.error('Account Favorite => DELETE', err);

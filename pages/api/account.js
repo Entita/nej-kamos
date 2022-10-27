@@ -1,5 +1,6 @@
 import Account from '../../models/Account';
-import { dbConnect, findOneFromMongo, UpdateOneFromMongo } from '../../utils/dbMongo';
+import Transaction from '../../models/Transaction';
+import { dbConnect, findOneFromMongo, UpdateOneFromMongo, findAllFromMongo } from '../../utils/dbMongo';
 import { getBasket, isBasketEmpty } from './basket';
 
 dbConnect();
@@ -8,8 +9,22 @@ export const getAccount = async (filter) => {
   return await findOneFromMongo(Account, filter);
 };
 
-export const formatAccountData = (dbAccount) => {
+export const getTransactions = async (filter) => {
+  const transactions = await findAllFromMongo(Transaction, filter);
+
+  return await Promise.all(transactions.map(async (transaction) => ({
+      _id: transaction._id,
+      basket: await getBasket(transaction.basketId),
+      type: transaction.type,
+      status: transaction.status,
+      createdAt: transaction.createdAt,
+  })));
+};
+
+export const formatAccountData = async (dbAccount) => {
   if (!dbAccount) return;
+
+  const transactions = await getTransactions({ _id: { $in: dbAccount.transactionIds }});
 
   return {
     _id: dbAccount._id,
@@ -22,7 +37,13 @@ export const formatAccountData = (dbAccount) => {
     verified: dbAccount.verified,
     roles: dbAccount.roles,
     emailSentAt: dbAccount.emailSentAt,
-    transactionIds: dbAccount.transactionIds,
+    transactions: transactions.map((transaction) => { return {
+      _id: transaction._id,
+      basket: transaction.basket,
+      type: transaction.type,
+      status: transaction.status,
+      createdAt: transaction.createdAt,
+    }}),
     address: dbAccount.address,
     notifications: dbAccount.notifications,
     favorites: dbAccount.favorites,
@@ -56,7 +77,7 @@ export default async (req, res) => {
         const accountCookie = cookies.accountId;
         if (!accountCookie) return res.status(200).json();
         const accountDb = await getAccount({ _id: accountCookie });
-        const account = formatAccountData(accountDb);
+        const account = await formatAccountData(accountDb);
         
         res.status(200).json({ data: account });
       } catch (err) {
@@ -93,7 +114,7 @@ export default async (req, res) => {
             accountDb = await getAccount({ _id: accountDb._id });
           }
 
-          const account = formatAccountData(accountDb);
+          const account = await formatAccountData(accountDb);
           return res.send({ data: account, toast: 'Successfully logged in!', custom_cookies: { accountId: accountDb._id, basketId: accountDb.basketId } });
         }
 
@@ -124,7 +145,7 @@ export default async (req, res) => {
         } else {
           newBasketCookie = accountDb.basketId;
         }
-        const account = formatAccountData(accountDb);
+        const account = await formatAccountData(accountDb);
         // const emailSent = await sendEmailVerification(accountDb._id, accountDb.email, req.header('Referer'));
         // if (!emailSent) throw 'Error when sending email';
     

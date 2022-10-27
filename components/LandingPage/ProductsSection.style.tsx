@@ -21,6 +21,7 @@ export const SectionTitleStyled = styled.h1`
 `;
 
 export const SectionOrderWrapperStyled = styled.div`
+  position: relative;
   display: flex;
   gap: 6px;
 `;
@@ -39,6 +40,12 @@ export const SectionOrderSelectStyled = styled.select`
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.14);
   outline: unset;
   appearance: unset;
+  cursor: pointer;
+  transition: background-color .2s ease;
+
+  &:hover {
+    background-color: ${Color.lightGray};
+  }
 `;
 
 export const SectionOrderOptionStyled = styled.option`
@@ -46,6 +53,24 @@ export const SectionOrderOptionStyled = styled.option`
   font-style: normal;
   font-weight: 300;
   font-size: 16px;
+`;
+
+export const SectionOrderOptionButtonWrapperStyled = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+
+  & > svg:nth-child(1) {
+    margin-top: -2px;
+  }
+
+  & > svg:nth-child(2) {
+    margin-top: -16px;
+  }
 `;
 
 export const ProductsWrapperStyled = styled.div`
