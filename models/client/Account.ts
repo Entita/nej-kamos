@@ -1,3 +1,5 @@
+import { Transaction } from "./Transaction";
+
 export interface Account {
   _id: string,
   firstname: string | null,
@@ -9,7 +11,7 @@ export interface Account {
   verified: boolean,
   roles: Array<string>,
   basketId: string,
-  transactionIds: Array<string>,
+  transactions: Array<string>,
   address: {
     city: string,
     street: string,
@@ -20,5 +22,5 @@ export interface Account {
     news: boolean,
     marketing: boolean,
   },
-  favorites: Array<string>,
+  favorites: Array<Transaction>,
 }

@@ -113,8 +113,10 @@ export const BasketFieldDesc = styled.span`
 `;
 
 export const BasketFieldDiscount = styled.div`
+  position: absolute;
+  right: 50%;
   display: flex;
-  flex-direction: column;
+  gap: 6px;
 `;
 
 export const BasketFieldDiscountText = styled.span`

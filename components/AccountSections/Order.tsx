@@ -51,6 +51,7 @@ export default function Order({ transaction }: { transaction: any }) {
               <BasketFieldDesc>{transaction.basket.coupon}</BasketFieldDesc>
               <BasketFieldDiscount>
                 <BasketFieldDiscountText>{`${transaction.basket.discount.amount && `${transaction.basket.discount.amount}%`}`}</BasketFieldDiscountText>
+                {transaction.basket.discount.amount && transaction.basket.discount.percent && <BasketFieldDiscountText>&</BasketFieldDiscountText>}
                 <BasketFieldDiscountText>{`${transaction.basket.discount.percent && `${transaction.basket.discount.percent}Kč`}`}</BasketFieldDiscountText>
               </BasketFieldDiscount>
             </BasketFieldWrapper>}
